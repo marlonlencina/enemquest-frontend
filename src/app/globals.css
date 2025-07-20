@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f7f8f9;
   --foreground: #171717;
 }
 
@@ -10,17 +10,59 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Cores customizadas do projeto */
+  --color-white-custom-10: #ffffff1a;
+  --color-white-custom-25: #ffffff40;
+  --color-white-custom-40: #ffffff66;
+
+  --color-white-custom: #ffffff;
+  --color-gray-100-custom: #f7f8f9;
+  --color-gray-200-custom: #eff2f5;
+  --color-gray-300-custom: #dee1e3;
+
+  --color-gray-500-custom: #83878b;
+
+  --color-black-custom: #090a0a;
+  --color-blue-primary: #0a66b9;
+  --color-mt-exam: #003da5;
+  --color-cn-exam: #009639;
+  --color-ch-exam: #97999b;
+  --color-lc-exam: #ef95cf;
+
+  /* Fontes customizadas */
+  --font-head: "Manrope", sans-serif;
+  --font-body: "proxima-nova", sans-serif;
+  --font-button: "proxima-nova", sans-serif;
+
+  /* Tamanhos de fonte customizados */
+  --text-sm10: 0.625rem;
+  --text-sm12: 0.75rem;
+  --text-sm14: 0.875rem;
+  --text-sub24: 1.5rem;
+  --text-sub32: 2rem;
+  --text-sub40: 2.5rem;
+  --text-sub48: 3rem;
+  --text-sub56: 3.5rem;
+  --text-caption16: 1rem;
+  --text-caption18: 1.125rem;
+  --text-body14: 0.875rem;
+  --text-body16: 1rem;
+  --text-body18: 1.125rem;
+  --text-body20: 1.25rem;
+  --text-button16: 1rem;
+  --text-button18: 1.125rem;
+  --text-head24: 1.5rem;
+  --text-head32: 2rem;
+  --text-head40: 2.5rem;
+  --text-head48: 3rem;
+  --text-head56: 3.5rem;
+  --text-head64: 4rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.container {
+  width: 100%;
+  max-width: 1248px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
