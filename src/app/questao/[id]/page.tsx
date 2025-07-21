@@ -9,16 +9,17 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 interface QuestaoPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({
   params,
 }: QuestaoPageProps): Promise<Metadata> {
   try {
-    const response = await getQuestionById(params.id);
+    const { id } = await params;
+    const response = await getQuestionById(id);
     const question = response.data as QuestaoCompleta;
 
     if (!question) {
@@ -50,7 +51,7 @@ export async function generateMetadata({
         images: question.imagemUrl ? [{ url: question.imagemUrl }] : [],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "Questão não encontrada",
       description: "A questão solicitada não foi encontrada.",
@@ -59,7 +60,7 @@ export async function generateMetadata({
 }
 
 export default async function Questao({ params }: QuestaoPageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   let question: QuestaoCompleta | null = null;
 
@@ -77,9 +78,7 @@ export default async function Questao({ params }: QuestaoPageProps) {
 
   return (
     <div>
-      <Header
-        title={`Questão ${question.posicao} - ${question.prova} ${question.ano}`}
-      />
+      <Header />
 
       <Container>
         <div className="mt-8">

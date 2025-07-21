@@ -49,7 +49,7 @@ export default function QuestionsWithFilters({
       console.log("Applying filters:", filters);
       
       // Converter filtros para o formato esperado pela API
-      const apiFilters: any = {
+      const apiFilters: Record<string, unknown> = {
         page: 1,
         limit: 12
       };

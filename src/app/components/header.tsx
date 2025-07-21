@@ -1,11 +1,8 @@
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import logo from "../../assets/logo.svg";
 export const Header = ({
-  title,
   variant = "default",
 }: {
-  title: string;
   variant?: "colored" | "default";
 }) => {
   return (

@@ -34,10 +34,10 @@ export default function FilterSelects({
 }: FilterSelectsProps) {
   const [filters, setFilters] = useState<FilterValues>({});
   const [years, setYears] = useState<number[]>([]);
-  const [areas, setAreas] = useState<any[]>([]);
+  const [areas, setAreas] = useState<{id: string; nome: string}[]>([]);
   const [aplicacoes, setAplicacoes] = useState<string[]>([]);
-  const [competencias, setCompetencias] = useState<any[]>([]);
-  const [habilidades, setHabilidades] = useState<any[]>([]);
+  const [competencias, setCompetencias] = useState<{id: string; nome: string; codigo: string}[]>([]);
+  const [habilidades, setHabilidades] = useState<{id: string; nome: string; codigo: string}[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch initial data
@@ -70,7 +70,7 @@ export default function FilterSelects({
         try {
           const data = await getAllCompetencias();
           const filteredCompetencias =
-            data.data?.filter((comp: any) => comp.areaId === filters.areaId) ||
+            data.data?.filter((comp: {areaId: string; id: string; nome: string; codigo: string}) => comp.areaId === filters.areaId) ||
             [];
           setCompetencias(filteredCompetencias);
         } catch (error) {
@@ -92,7 +92,7 @@ export default function FilterSelects({
           const data = await getAllHabilidades();
           const filteredHabilidades =
             data.data?.filter(
-              (hab: any) => hab.competenciaId === filters.competenciaId
+              (hab: {competenciaId: string; id: string; nome: string; codigo: string}) => hab.competenciaId === filters.competenciaId
             ) || [];
           setHabilidades(filteredHabilidades);
         } catch (error) {

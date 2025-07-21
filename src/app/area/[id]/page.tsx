@@ -4,7 +4,7 @@ import { Header } from "@/app/components/header";
 export default function Details() {
   return (
     <div>
-      <Header title="Detalhes" />
+      <Header />
       <Container>
         <div className="">
           

@@ -1,6 +1,5 @@
 import { getQuestions } from "@/server/requests";
 import { Metadata } from "next";
-import Button from "./components/Button";
 import { Container } from "./components/container";
 import { Header } from "./components/header";
 import QuestionsWithFilters from "./components/QuestionsWithFilters";
@@ -32,7 +31,7 @@ export default async function Home() {
     <div className="w-full pb-12">
       {/* <Header title="Dashboard" /> */}
       <div className="flex flex-col w-full bg-blue-primary ">
-        <Header variant="colored" title="Dashboard" />
+        <Header variant="colored" />
         <Container>
           <div className="w-full py-12 flex-1 ">
             <div>
