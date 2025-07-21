@@ -6,7 +6,7 @@ import QuestionsWithFilters from "./components/QuestionsWithFilters";
 import { Questao } from "./types/question";
 
 export const metadata: Metadata = {
-  title: "ENEM - Banco de Questões | Últimas Questões do ENEM",
+  title: "Dev ENEM - Banco de Questões | Últimas Questões do ENEM",
   description:
     "O maior banco de dados de questões do ENEM. Encontre questões organizadas por ano, área, habilidade e competência. Prepare-se para o ENEM com as últimas questões disponíveis.",
   keywords: "ENEM, questões, banco de dados, vestibular, educação, preparação",
