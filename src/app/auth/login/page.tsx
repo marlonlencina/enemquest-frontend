@@ -1,8 +1,10 @@
 "use client";
 import { Container } from "@/app/components/container";
 import { Logo } from "@/app/components/Logo";
+import { Input } from "@/app/components/form/Input";
+import { Button } from "@/app/components/form/Button";
 
-export default function Signup() {
+export default function Login() {
   return (
     <div className="bg-gray-100-custom w-full">
       <Container>
@@ -39,28 +41,24 @@ export default function Signup() {
                   Entre com e-mail/usuário e senha
                 </h6>
                 <form className=" flex flex-col gap-6 mt-6" action="">
-                  <div className="flex flex-col gap-4">
-                    <input
+                  <div className="flex flex-col gap-3">
+                    <Input
+                      label="E-mail/Usuário"
                       type="email"
+                      id="email"
                       placeholder="Digite seu e-mail ou usuário"
-                      className="font-body font-normal text-body16 placeholder:text-gray-400-custom text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md outline-0"
                     />
-                    <div className="font-body font-normal text-body16  text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md ">
-                      <input
-                        className="h-full w-full placeholder:text-gray-400-custom outline-0"
-                        type="password"
-                        placeholder="Digite sua senha"
-                      />
-                    </div>
-                    <div className="w-full flex items-center"></div>
+                    <Input
+                      label="Senha"
+                      type="password"
+                      id="password"
+                      placeholder="********"
+                      showPasswordToggle
+                    />
                   </div>
                   <div className="flex items-center gap-6">
-                    <button className="cursor-pointer  h-[56px] w-full flex items-center justify-center gap-4 bg-transparent border border-gray-200-custom rounded-md font-button text-button16 text-gray-500-custom font-semibold">
-                      Cadastrar-se
-                    </button>
-                    <button className="cursor-pointer  h-[56px] w-full flex items-center justify-center gap-4 bg-blue-primary rounded-md font-button text-button16 text-white-custom font-semibold">
-                      Entrar
-                    </button>
+                    <Button text="Cadastrar-se" variant="secondary" fullWidth />
+                    <Button text="Entrar" variant="primary" fullWidth />
                   </div>
                 </form>
               </div>

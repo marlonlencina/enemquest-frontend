@@ -15,7 +15,7 @@ export const NavLink = ({ href, children }: NavLinkProps) => {
   return (
     <Link
       href={href}
-      className={`min-w-[148px] cursor-pointer w-full flex items-center justify-center px-4 h-full border-b ${isActive ? `border-blue-primary` : `border-transparent`}`}
+      className={`min-w-[112px] cursor-pointer w-full flex items-center justify-center px-4 h-full border-b ${isActive ? `border-blue-primary` : `border-transparent`}`}
     >
       <p 
         className={`font-head text-body18 ${

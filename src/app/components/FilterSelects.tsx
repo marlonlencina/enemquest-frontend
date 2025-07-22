@@ -8,8 +8,8 @@ import {
   getAvailableYears,
 } from "@/server/requests";
 import { useEffect, useState } from "react";
-import Button from "./Button";
 import Select from "./Select";
+import { Button } from "./form/Button";
 
 interface FilterValues {
   ano?: string;
@@ -34,10 +34,14 @@ export default function FilterSelects({
 }: FilterSelectsProps) {
   const [filters, setFilters] = useState<FilterValues>({});
   const [years, setYears] = useState<number[]>([]);
-  const [areas, setAreas] = useState<{id: string; nome: string}[]>([]);
+  const [areas, setAreas] = useState<{ id: string; nome: string }[]>([]);
   const [aplicacoes, setAplicacoes] = useState<string[]>([]);
-  const [competencias, setCompetencias] = useState<{id: string; nome: string; codigo: string}[]>([]);
-  const [habilidades, setHabilidades] = useState<{id: string; nome: string; codigo: string}[]>([]);
+  const [competencias, setCompetencias] = useState<
+    { id: string; nome: string; codigo: string }[]
+  >([]);
+  const [habilidades, setHabilidades] = useState<
+    { id: string; nome: string; codigo: string }[]
+  >([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch initial data
@@ -70,8 +74,14 @@ export default function FilterSelects({
         try {
           const data = await getAllCompetencias();
           const filteredCompetencias =
-            data.data?.filter((comp: {areaId: string; id: string; nome: string; codigo: string}) => comp.areaId === filters.areaId) ||
-            [];
+            data.data?.filter(
+              (comp: {
+                areaId: string;
+                id: string;
+                nome: string;
+                codigo: string;
+              }) => comp.areaId === filters.areaId
+            ) || [];
           setCompetencias(filteredCompetencias);
         } catch (error) {
           console.error("Error fetching competencias:", error);
@@ -92,7 +102,12 @@ export default function FilterSelects({
           const data = await getAllHabilidades();
           const filteredHabilidades =
             data.data?.filter(
-              (hab: {competenciaId: string; id: string; nome: string; codigo: string}) => hab.competenciaId === filters.competenciaId
+              (hab: {
+                competenciaId: string;
+                id: string;
+                nome: string;
+                codigo: string;
+              }) => hab.competenciaId === filters.competenciaId
             ) || [];
           setHabilidades(filteredHabilidades);
         } catch (error) {
@@ -199,23 +214,32 @@ export default function FilterSelects({
         <div className="text-gray-500-custom font-body text-body16">
           {filteredCount !== undefined ? (
             <span>
-              <strong className="text-black-custom">{filteredCount}</strong> questões encontradas
+              <strong className="text-black-custom">{filteredCount}</strong>{" "}
+              questões encontradas
               {totalQuestions > 0 && (
-                <span> de <strong className="text-black-custom">{totalQuestions}</strong> total</span>
+                <span>
+                  {" "}
+                  de{" "}
+                  <strong className="text-black-custom">
+                    {totalQuestions}
+                  </strong>{" "}
+                  total
+                </span>
               )}
             </span>
           ) : (
             <span>
-              <strong className="text-black-custom">{totalQuestions}</strong> questões disponíveis
+              <strong className="text-black-custom">{totalQuestions}</strong>{" "}
+              questões disponíveis
             </span>
           )}
         </div>
-        <div className=" flex items-center justify-end gap-2">
+        {/* <div className=" flex items-center justify-end gap-2">
           <Button variant="link" onClick={handleClearFilters}>
             Limpar filtros
           </Button>
           <Button onClick={handleApplyFilters}>Filtrar</Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

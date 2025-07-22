@@ -1,6 +1,8 @@
 "use client";
 import { Container } from "@/app/components/container";
+import { Input } from "@/app/components/form/Input";
 import { Logo } from "@/app/components/Logo";
+import { Button } from "@/app/components/form/Button";
 
 export default function Signup() {
   return (
@@ -39,55 +41,45 @@ export default function Signup() {
                   Cadastre-se com seus dados
                 </h6>
                 <form className=" flex flex-col gap-6 mt-6" action="">
-                  <div className="flex flex-col gap-4">
-                    <input
+                  <div className="flex flex-col gap-3">
+                    <Input
+                      label="Nome"
                       type="text"
                       placeholder="Digite seu nome"
-                      className="font-body font-normal text-body16 placeholder:text-gray-400-custom text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md outline-0"
                     />
-                    <input
+                    <Input
+                      label="Sobrenome"
                       type="text"
                       placeholder="Digite seu sobrenome"
-                      className="font-body font-normal text-body16 placeholder:text-gray-400-custom text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md outline-0"
                     />
-                    <input
+                    <Input
+                      label="E-mail"
                       type="email"
                       placeholder="Digite seu e-mail"
-                      className="font-body font-normal text-body16 placeholder:text-gray-400-custom text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md outline-0"
                     />
-                    <div className="flex items-center gap-4 font-body font-normal text-body16  text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md ">
-                      <span className="font-body text-body16 font-semibold text-blue-primary">
-                        @
-                      </span>
-                      <input
-                        className="h-full w-full placeholder:text-gray-400-custom outline-0"
-                        type="text"
-                        placeholder="Crie seu usuário"
-                      />
-                    </div>
-                    <div className="font-body font-normal text-body16  text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md ">
-                      <input
-                        className="h-full w-full placeholder:text-gray-400-custom outline-0"
-                        type="password"
-                        placeholder="Digite sua senha"
-                      />
-                    </div>
-                    <div className="font-body font-normal text-body16  text-black-custom w-full h-[56px] px-4 border border-gray-200-custom rounded-md ">
-                      <input
-                        className="h-full w-full placeholder:text-gray-400-custom outline-0"
-                        type="password"
-                        placeholder="Digite sua confirmação de senha"
-                      />
-                    </div>
+                    <Input
+                      label="Usuário"
+                      type="text"
+                      placeholder="Crie seu usuário"
+                      prefix="@"
+                    />
+                    <Input
+                      label="Senha"
+                      type="password"
+                      placeholder="Digite sua senha"
+                      showPasswordToggle
+                    />
+                    <Input
+                      label="Confirmação de Senha"
+                      type="password"
+                      placeholder="Digite sua confirmação de senha"
+                      showPasswordToggle
+                    />
                     <div className="w-full flex items-center"></div>
                   </div>
                   <div className="flex items-center gap-6">
-                    <button className="cursor-pointer  h-[56px] w-full flex items-center justify-center gap-4 bg-transparent border border-gray-200-custom rounded-md font-button text-button16 text-gray-500-custom font-semibold">
-                      Já tenho conta
-                    </button>
-                    <button className="cursor-pointer  h-[56px] w-full flex items-center justify-center gap-4 bg-blue-primary rounded-md font-button text-button16 text-white-custom font-semibold">
-                      Cadastrar
-                    </button>
+                    <Button text="Já tenho conta" variant="secondary" fullWidth />
+                    <Button text="Cadastrar" variant="primary" fullWidth />
                   </div>
                 </form>
               </div>
