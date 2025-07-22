@@ -68,8 +68,6 @@ export const getQuestionById = async (id: string): Promise<getQuestionByIdRespon
   }
 };
 
-// === DADOS PARA FILTROS ===
-
 export const getAvailableYears = async () => {
   try {
     const response = await api.get('/questions/years');

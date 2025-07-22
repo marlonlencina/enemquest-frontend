@@ -1,7 +1,7 @@
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { DM_Sans, Inter, Manrope } from "next/font/google";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,7 +12,19 @@ export const metadata: Metadata = {
 const manrope = Manrope({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
   subsets: ["latin"],
-  display: "swap", // Opcional: melhora performance
+  display: "swap",
+});
+
+const inter = Inter({
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const dmsans = DM_Sans({
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export default function RootLayout({
@@ -22,9 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="stylesheet" href="https://use.typekit.net/txb1arq.css" />
-      </head>
+      <head></head>
       <body className={`w-full h-full bg-gray-100-custom ${manrope.className}`}>
         <Theme>{children}</Theme>
       </body>

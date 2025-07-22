@@ -1,33 +1,48 @@
+'use client';
+
 import Image from "next/image";
-import logo from "../../assets/logo.svg";
+import Link from "next/link";
+import IconButton from "./IconButton";
+import { Logo } from "./Logo";
+import { NavLink } from "./NavLink";
+
 export const Header = ({
   variant = "default",
 }: {
   variant?: "colored" | "default";
 }) => {
   return (
-    
-    <header className={`w-full border-b ${variant === "colored" ? "bg-transparent border-white-custom-10 " : "bg-white-custom border-gray-200-custom"}`}>
-      <div className="container h-[72px]  flex items-center justify-between">
-        <div>
-          <Image height={32} alt="Logo" src={logo} />
+    <header className={`h-[72px] w-full`}>
+      <div className=" w-full fixed top-0 left-0 right-0 z-50">
+        <div className="container h-[72px] flex items-center justify-between bg-gray-200-custom">
+          <div className="flex items-center gap-6 bg-white-custom h-full px-6">
+            <Link href={"/dashboard"}>
+              <Logo logoTextColor="#090A0A" />
+            </Link>
+          </div>
+          <div className="w-full h-full flex items-center justify-between pr-6 gap-4 bg-white-custom">
+            <div className="flex items-center h-full">
+              <NavLink href="/dashboard">
+                Dashboard
+              </NavLink>
+              <NavLink href="/dashboard/listas">
+                Listas
+              </NavLink>
+            </div>
+            <div className="flex items-center gap-6 h-full">
+              <IconButton isFullRounded iconName={"lucide:bell"} onClick={() => {}} />
+              <div className="cursor-pointer transition-all">
+                <Image
+                  width={36}
+                  height={36}
+                  alt="avatar"
+                  src={"https://github.com/marlonlencina.png"}
+                  className="rounded-full bg-white"
+                ></Image>
+              </div>
+            </div>
+          </div>
         </div>
-        {/* <div className="group rounded-[4px] px-4 h-[48px] max-w-[484px] w-full flex items-center gap-2 border border-white-custom-10  focus:outline-none focus:ring-2 focus:ring-white-custom  transition-all">
-          <MagnifyingGlassIcon
-            height={24}
-            width={24}
-            className="text-white-custom-10"
-          />
-          <input
-            type="text"
-            placeholder="Buscar questões..."
-            className="text-white-custom placeholder:text-white-custom-10 w-full bg-transparent  outline-0"
-          />
-        </div> */}
-       
-        {/* <h1 className="font-head text-body18 font-semibold text-black-custom">
-          {title}
-        </h1> */}
       </div>
     </header>
   );

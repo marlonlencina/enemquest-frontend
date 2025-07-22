@@ -20,20 +20,29 @@
   --color-gray-100-custom: #f7f8f9;
   --color-gray-200-custom: #eff2f5;
   --color-gray-300-custom: #dee1e3;
-
+  --color-gray-400-custom: #B6B9BD;
   --color-gray-500-custom: #83878b;
 
   --color-black-custom: #090a0a;
+  --color-blue-primary-light: #23abd2;
   --color-blue-primary: #0a66b9;
+  --color-blue-primary-dark: #093863;
+  --color-pink-primary-light: #f783a6;
+  --color-pink-primary: #f6769c;
+  --color-pink-primary-dark: #f86892;
+
   --color-mt-exam: #003da5;
-  --color-cn-exam: #009639;
+  --color-cn-exam: #52c072;
   --color-ch-exam: #97999b;
   --color-lc-exam: #ef95cf;
 
+  --color-success: #198754;
+  --color-failed: #dc3545;
+
   /* Fontes customizadas */
   --font-head: "Manrope", sans-serif;
-  --font-body: "proxima-nova", sans-serif;
-  --font-button: "proxima-nova", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-button: "DM Sans", sans-serif;
 
   /* Tamanhos de fonte customizados */
   --text-sm10: 0.625rem;

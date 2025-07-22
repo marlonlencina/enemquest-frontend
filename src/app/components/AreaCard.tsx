@@ -4,19 +4,29 @@ interface AreaCardProps {
   href: string;
   bgColor: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
 }
 
-export default function AreaCard({ href, bgColor, title, subtitle }: AreaCardProps) {
+export default function AreaCard({
+  href,
+  bgColor,
+  title,
+  subtitle,
+}: AreaCardProps) {
   return (
-    <Link href={href} className={`h-[256px] w-full rounded-[4px] ${bgColor} p-6 flex items-end justify-start hover:opacity-95 hover:scale-105 transition-all`}>
+    <Link
+      href={href}
+      className={`h-[164px] w-full rounded-lg bg-white-custom p-6 flex items-end justify-start hover:opacity-80 transition-all`}
+    >
       <div>
-        <h1 className="font-head text-head24 text-white-custom max-w-[200px]">
+        <h1 className="font-head font-medium text-body20 text-black-custom max-w-[200px]">
           {title}
         </h1>
-        <p className="mt-2 font-normal font-body text-body16 text-white-custom opacity-75">
-          {subtitle}
-        </p>
+        {subtitle && (
+          <p className="font-head text-body16 text-gray-500-custom max-w-[200px] mt-2">
+            {subtitle}
+          </p>
+        )}
       </div>
     </Link>
   );

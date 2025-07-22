@@ -1,9 +1,14 @@
-import { getQuestions } from "@/server/requests";
+import { getAllAreas, getQuestions } from "@/server/requests";
 import { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import logoText from "../assets/logotext.svg";
+import AreaCard from "./components/AreaCard";
 import { Container } from "./components/container";
 import { Header } from "./components/header";
-import QuestionsWithFilters from "./components/QuestionsWithFilters";
+import { Area } from "./types/exam";
 import { Questao } from "./types/question";
+import { getBgColorByArea } from "./utils/getBgColorByArea";
 
 export const metadata: Metadata = {
   title: "Dev ENEM - Banco de Questões | Últimas Questões do ENEM",
@@ -20,31 +25,33 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   let questions: Questao[] = [];
+  let areas: Area[] = [];
   try {
-    const data = await getQuestions({ page: 1, limit: 10 });
-    questions = data.questoes;
+    const dataQuestions = await getQuestions({ page: 1, limit: 10 });
+    const dataAreas = await getAllAreas();
+    console.log("dataAreas", dataAreas);
+    questions = dataQuestions.questoes;
+    areas = dataAreas.data;
   } catch (error) {
     console.error("Error fetching last questions:", error);
   }
 
   return (
-    <div className="w-full pb-12">
+    <div className="w-full">
       {/* <Header title="Dashboard" /> */}
-      <div className="flex flex-col w-full bg-blue-primary ">
+      <div className="flex flex-col w-full bg-blue-primary-dark ">
         <Header variant="colored" />
         <Container>
           <div className="w-full py-12 flex-1 ">
             <div>
-              <h1 className="font-head text-head32 font-normal text-white-custom">
-                O maior{" "}
-                <b>
-                  banco de dados de questões <br /> do ENEM
-                </b>{" "}
-                disponível para você.
+              <h1 className="font-head text-head40 font-light text-white-custom">
+                O <b className="font-semibold">banco de questões</b>
+                {""} que vai <br /> tornar o ENEM uma Quest fácil
               </h1>
-              <p className="mt-2 font-normal font-body text-body16 text-white-custom opacity-75">
-                Encontre questões organizadas por ano, área, habilidade,
-                competência e mais
+              <p className="mt-4 font-normal font-head text-body20 text-white-custom max-w-[560px]">
+                Explore milhares de questões do ENEM, salve-as para você, crie
+                listas de exercícios e suba no ranking.
+                <br />
               </p>
             </div>
             {/* <div className="mt-6">
@@ -53,20 +60,39 @@ export default async function Home() {
           </div>
         </Container>
       </div>
-      <Container>
-        <QuestionsWithFilters initialQuestions={questions} />
-      </Container>
-     {/*  <footer className="w-full bg-black-custom mt-8">
+      <div className="bg-gray-100-custom pt-12">
         <Container>
-          <div className="w-full py-12 flex items-center justify-center">
-            <p className="mt-2 font-normal font-body text-body16 text-white-custom text-center">
-              Esse é um projeto independente que visa ajudar outros estudantes a
-              se preparar para a maior prova de concurso do Brasil. <br /> Todos
-              dados nesse app são de domínio público.
-            </p>
+          <div className="grid grid-cols-4 gap-8">
+            {areas.map((area) => (
+              <AreaCard
+                key={area.id}
+                href={`/areas/${area.id}`}
+                bgColor={getBgColorByArea(area.codigo)}
+                title={area.nome}
+              />
+            ))}
           </div>
         </Container>
-      </footer> */}
+        {/* <Container>
+          <QuestionsWithFilters initialQuestions={questions} />
+        </Container> */}
+      </div>
+      <footer className="w-full bg-black-custom mt-12">
+        <Container>
+          <div className="w-full py-12 flex ">
+            <div>
+              <Link href={"/"} className="flex items-center gap-3">
+                <Image width={98} src={logoText} alt="logo texto" />
+              </Link>
+              <p className="mt-6 font-normal font-body text-body14 text-white-custom max-w-[480px]">
+                Esse é um projeto completamente independente que visa ajudar
+                outros estudantes a se preparar para a maior prova de concurso
+                do Brasil. <br /> Todos dados nesse app são de domínio público.
+              </p>
+            </div>
+          </div>
+        </Container>
+      </footer>
     </div>
   );
 }

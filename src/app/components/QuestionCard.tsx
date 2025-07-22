@@ -19,7 +19,7 @@ export default function QuestionCard({
   link = '/'
 }: QuestionCardProps) {
   return (
-    <Link href={link} className="group w-full border-gray-200-custom border rounded-[4px] cursor-pointer hover:border-gray-300-custom transition-all">
+    <Link href={link} className="group w-full border-gray-200-custom border rounded-[4px] cursor-pointer hover:border-gray-300-custom transition-all bg-white-custom">
       <div className="pt-6 px-6">
         <h4 className="font-head text-body18 font-semibold text-black-custom">
           {title}

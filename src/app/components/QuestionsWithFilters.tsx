@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { getQuestions } from "@/server/requests";
+import { useEffect, useState } from "react";
 import { Questao } from "../types/question";
 import { getBgColorByArea } from "../utils/getBgColorByArea";
 import FilterSelects from "./FilterSelects";
 import QuestionCard from "./QuestionCard";
-import { getQuestions } from "@/server/requests";
 
 interface QuestionsWithFiltersProps {
   initialQuestions: Questao[];
@@ -25,7 +25,9 @@ export default function QuestionsWithFilters({
   const [questions, setQuestions] = useState<Questao[]>(initialQuestions);
   const [loading, setLoading] = useState(false);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [filteredCount, setFilteredCount] = useState<number | undefined>(undefined);
+  const [filteredCount, setFilteredCount] = useState<number | undefined>(
+    undefined
+  );
 
   // Carregar total inicial
   useEffect(() => {
@@ -47,33 +49,33 @@ export default function QuestionsWithFilters({
     setLoading(true);
     try {
       console.log("Applying filters:", filters);
-      
+
       // Converter filtros para o formato esperado pela API
       const apiFilters: Record<string, unknown> = {
         page: 1,
-        limit: 12
+        limit: 12,
       };
-      
+
       if (filters.ano) {
         apiFilters.ano = filters.ano;
       }
-      
+
       if (filters.aplicacao) {
         apiFilters.aplicacao = filters.aplicacao;
       }
-      
+
       if (filters.areaId) {
         apiFilters.areaId = filters.areaId;
       }
-      
+
       if (filters.competenciaId) {
         apiFilters.competenciaId = filters.competenciaId;
       }
-      
+
       if (filters.habilidadeId) {
         apiFilters.habilidadeId = filters.habilidadeId;
       }
-      
+
       const response = await getQuestions(apiFilters);
       setQuestions(response.questoes || []);
       setFilteredCount(response.pagination?.total || 0);
@@ -88,7 +90,7 @@ export default function QuestionsWithFilters({
     setLoading(true);
     try {
       console.log("Clearing filters, loading initial questions");
-      
+
       // Carregar questões iniciais sem filtros
       const response = await getQuestions({ page: 1, limit: 12 });
       setQuestions(response.questoes || []);
@@ -102,14 +104,14 @@ export default function QuestionsWithFilters({
   };
 
   return (
-    <div className="mt-8">
+    <div className="pt-8">
       <div>
         <div>
           <h1 className="font-head text-head24 font-semibold text-black-custom">
             Questões do ENEM
           </h1>
           <div className="mt-4">
-            <FilterSelects 
+            <FilterSelects
               onApplyFilters={handleApplyFilters}
               onClearFilters={handleClearFilters}
               totalQuestions={totalQuestions}
@@ -125,25 +127,28 @@ export default function QuestionsWithFilters({
           )}
           {!loading && questions.length === 0 && (
             <div className="col-span-3 text-center py-8">
-              <p className="text-gray-500-custom">Nenhuma questão encontrada com os filtros aplicados.</p>
+              <p className="text-gray-500-custom">
+                Nenhuma questão encontrada com os filtros aplicados.
+              </p>
             </div>
           )}
-          {!loading && questions.map((question) => (
-            <QuestionCard
-              key={question.id}
-              title={`ENEM ${question.ano} ${question.prova}`}
-              subtitle={`Questão ${question.posicao} - ${question.provaCorReferencia}`}
-              category={
-                question.habilidade?.competencia?.area?.nome ||
-                "Área Desconhecida"
-              }
-              imageUrl={question.imagemUrl || ""}
-              bgColor={getBgColorByArea(
-                question.habilidade?.competencia?.area?.nome || ""
-              )}
-              link={`/questao/${question.id}`}
-            />
-          ))}
+          {!loading &&
+            questions.map((question) => (
+              <QuestionCard
+                key={question.id}
+                title={`ENEM ${question.ano} ${question.prova}`}
+                subtitle={`Questão ${question.posicao} - ${question.provaCorReferencia}`}
+                category={
+                  question.habilidade?.competencia?.area?.nome ||
+                  "Área Desconhecida"
+                }
+                imageUrl={question.imagemUrl || ""}
+                bgColor={getBgColorByArea(
+                  question.habilidade?.competencia?.area?.nome || ""
+                )}
+                link={`/questao/${question.id}`}
+              />
+            ))}
         </div>
       </div>
     </div>
