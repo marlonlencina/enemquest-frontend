@@ -1,6 +1,6 @@
 "use client";
-import { Container } from "@/app/components/container";
-import { Logo } from "@/app/components/Logo";
+import { Container } from "@/app/components/layout/Container";
+import { Logo } from "@/app/components/layout/Logo";
 import { Input } from "@/app/components/form/Input";
 import { Button } from "@/app/components/form/Button";
 
@@ -9,7 +9,7 @@ export default function Login() {
     <div className="bg-gray-100-custom w-full">
       <Container>
         <div className="flex items-center justify-center w-full py-12 flex-1 bg-gray-100-custom px-6 min-h-screen">
-          <div className="max-w-[564px] mx-auto w-full bg-white">
+          <div className="max-w-[552px] mx-auto w-full bg-white">
             <div className="bg-blue-primary-dark p-6">
               <Logo height={36} />
               <h6 className="font-head text-head24 text-white-custom font-normal mt-4">

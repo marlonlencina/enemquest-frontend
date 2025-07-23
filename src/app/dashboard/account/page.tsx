@@ -1,8 +1,9 @@
 import { getAllAreas } from "@/server/requests";
-import { Container } from "../../components/container";
+import { Container } from "../../components/layout/Container";
 import { Header } from "../../components/header";
-import SectionDescription from "../../components/SectionDescription";
-import SectionTitle from "../../components/SectionTitle";
+import SectionDescription from "../../components/layout/SectionDescription";
+import SectionTitle from "../../components/layout/SectionTitle";
+import { PageTitle } from "../../components/layout/PageTitle";
 import { Area } from "../../types/exam";
 import { Input } from "@/app/components/form/Input";
 import { Button } from "@/app/components/form/Button";
@@ -23,9 +24,9 @@ export default async function Dashboard() {
         <Container>
           <div className="w-full py-12 flex-1 bg-gray-100-custom px-6">
             <div className="w-full  flex flex-col">
-              <h1 className="font-head text-head24 font-normal text-black-custom">
+              <PageTitle>
                 Sua conta
-              </h1>
+              </PageTitle>
               <div className="mt-6 w-full bg-white-custom p-6 rounded-lg">
                 <div>
                   <SectionTitle>Informações da conta</SectionTitle>

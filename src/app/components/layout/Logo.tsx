@@ -1,5 +1,5 @@
 import Image from "next/image";
-import logomark from "../../assets/logomark.svg";
+import logomark from "../../../assets/logomark.svg";
 
 interface LogoProps {
   height?: number;

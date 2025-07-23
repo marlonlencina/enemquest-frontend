@@ -1,4 +1,4 @@
-import { getBgColorByArea } from "../utils/getBgColorByArea";
+import { getBgColorByArea } from "../../utils/getBgColorByArea";
 
 export type SubjectCode = "MT" | "LC" | "CH" | "CN";
 

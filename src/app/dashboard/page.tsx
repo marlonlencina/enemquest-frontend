@@ -1,12 +1,13 @@
 import { getAllAreas } from "@/server/requests";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Metadata } from "next";
-import AreaCard from "../components/AreaCard";
-import { Container } from "../components/container";
+import AreaCard from "../components/layout/AreaCard";
+import { Container } from "../components/layout/Container";
 import { Header } from "../components/header";
-import SectionDescription from "../components/SectionDescription";
-import SectionTitle from "../components/SectionTitle";
-import StatCard from "../components/StatCard";
+import SectionDescription from "../components/layout/SectionDescription";
+import SectionTitle from "../components/layout/SectionTitle";
+import StatCard from "../components/layout/StatCard";
+import { PageTitle } from "../components/layout/PageTitle";
 import { Area } from "../types/exam";
 import { getBgColorByArea } from "../utils/getBgColorByArea";
 
@@ -39,9 +40,9 @@ export default async function Dashboard() {
         <Container>
           <div className="w-full py-12 flex-1 bg-gray-100-custom px-6">
             <div>
-              <h1 className="font-head text-head24 font-normal text-black-custom">
+              <PageTitle>
                 👏 Bem-vindo, <b className="font-semibold">Marlon</b>
-              </h1>
+              </PageTitle>
               <div className="grid grid-cols-4 mt-6 gap-6">
                 <div className="col-span-2 w-full h-[164px] rounded-lg bg-blue-primary "></div>
                 <StatCard text="Patente" number="Iniciante" />
@@ -73,9 +74,9 @@ export default async function Dashboard() {
               </div>
             </div>
             <div className="w-full mt-8">
-              <h1 className="font-head text-head24 font-normal text-black-custom">
+              <PageTitle>
                 Explore as áreas do ENEM
-              </h1>
+              </PageTitle>
               <div className="grid grid-cols-4 gap-6 mt-6">
                 {areas.map((area) => (
                   <AreaCard

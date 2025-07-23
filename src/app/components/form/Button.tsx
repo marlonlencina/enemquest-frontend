@@ -25,9 +25,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       "px-4 cursor-pointer h-[56px] flex items-center justify-center gap-4 rounded-md font-button text-button16 font-semibold";
 
     const variantClasses = {
-      primary: "bg-pink-primary border border-pink-primary text-white-custom",
+      primary:
+        "bg-pink-primary border border-pink-primary text-white-custom hover:bg-pink-primary-dark hover:border-pink-primary-dark",
       secondary:
-        "bg-transparent border border-gray-200-custom text-gray-500-custom",
+        "bg-transparent border border-gray-200-custom text-gray-500-custom hover:bg-gray-200-custom",
     };
 
     const isDisabled = disabled || loading;

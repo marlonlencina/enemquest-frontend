@@ -1,6 +1,6 @@
-import IconButton from "./../IconButton";
-import SubjectBadge, { SubjectCode } from "./../SubjectBadge";
-import TextButton from "./../TextButton";
+import IconButton from "./../layout/IconButton";
+import SubjectBadge, { SubjectCode } from "./../layout/SubjectBadge";
+import TextButton from "./../layout/TextButton";
 
 interface QuestionDetailsProps {
   title: string;

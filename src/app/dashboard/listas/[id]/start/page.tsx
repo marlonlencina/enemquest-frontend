@@ -1,6 +1,6 @@
 "use client";
 
-import { Container } from "@/app/components/container";
+import { Container } from "@/app/components/layout/Container";
 import { Header } from "@/app/components/header";
 import { QuestionDetails } from "@/app/components/question/QuestionDetails";
 import { QuestionFamily } from "@/app/components/question/QuestionFamily";
