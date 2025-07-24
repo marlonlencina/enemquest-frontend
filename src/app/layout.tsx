@@ -1,5 +1,7 @@
+import { AuthProvider } from "@/context/useAuth";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import { DM_Sans, Inter, Manrope } from "next/font/google";
 import "./globals.css";
@@ -36,7 +38,13 @@ export default function RootLayout({
     <html lang="en">
       <head></head>
       <body className={`w-full h-full bg-gray-100-custom ${manrope.className}`}>
-        <Theme>{children}</Theme>
+        <Theme>
+          <AuthProvider>
+            <GoogleOAuthProvider clientId="365219771523-86ivnuc1iq7hmn8m23rth8119grvv1p0.apps.googleusercontent.com">
+              {children}
+            </GoogleOAuthProvider>
+          </AuthProvider>
+        </Theme>
       </body>
     </html>
   );

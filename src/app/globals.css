@@ -38,6 +38,8 @@
 
   --color-success: #198754;
   --color-failed: #dc3545;
+  --color-success-10: #1987540a;
+  --color-failed-10: #dc35450a;
 
   /* Fontes customizadas */
   --font-head: "Manrope", sans-serif;
