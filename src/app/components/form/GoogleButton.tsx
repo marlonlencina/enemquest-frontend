@@ -1,53 +1,35 @@
 "use client";
-import { Icon } from "@iconify/react/dist/iconify.js";
-import { forwardRef } from "react";
+import { useAuth } from "@/context/useAuth";
+import { GoogleLogin } from "@react-oauth/google";
 
-interface GoogleButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
-  fullWidth?: boolean;
-  loading?: boolean;
-  className?: string;
+interface GoogleButtonProps {
+  text?:
+    | "signin"
+    | "signin_with"
+    | "signup_with"
+    | "continue_with"
+    | undefined;
 }
 
-const GoogleButton = forwardRef<HTMLButtonElement, GoogleButtonProps>(
-  (
-    {
-      text,
-      fullWidth = false,
-      loading = false,
-      className,
-      disabled,
-      ...props
-    },
-    ref
-  ) => {
-    const isDisabled = disabled || loading;
+const GoogleButton = ({ text = 'continue_with' }: GoogleButtonProps) => {
+  const { authGoogle } = useAuth();
 
-    return (
-      <button
-        {...props}
-        ref={ref}
-        disabled={isDisabled}
-        className={`
-          bg-white-custom-10 cursor-pointer border border-gray-200-custom h-[56px] flex items-center justify-center gap-4 hover:border-blue-primary-dark transition-all rounded-md font-button text-button16 text-black-custom font-semibold
-          ${fullWidth ? "w-full" : ""}
-          ${isDisabled ? "opacity-50 cursor-not-allowed" : ""}
-          ${className || ""}
-        `}
-      >
-        {loading ? (
-          "Carregando..."
-        ) : (
-          <>
-            {text}
-            <Icon icon="logos:google-icon" height={24} />
-          </>
-        )}
-      </button>
-    );
-  }
-);
-
-GoogleButton.displayName = "GoogleButton";
+  return (
+    <GoogleLogin
+      text={text}
+      onSuccess={(credentialResponse) => {
+        console.log("Token do Google:", credentialResponse.credential);
+        if (!credentialResponse.credential) {
+          console.error("Nenhum token recebido do Google");
+          return;
+        }
+        authGoogle(credentialResponse.credential);
+      }}
+      onError={() => {
+        console.log("Erro no login");
+      }}
+    />
+  );
+};
 
 export { GoogleButton };

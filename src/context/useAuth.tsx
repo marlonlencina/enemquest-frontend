@@ -7,12 +7,13 @@ import {
 import { api } from "@/server/api";
 import {
   getMyProfile,
-  googleLogin,
+  googleAuth,
   LoginData,
   login as loginRequest,
   SignupData,
   signup as signupRequest,
 } from "@/server/userRequests";
+import { useRouter } from "next/navigation";
 import React, {
   createContext,
   ReactNode,
@@ -29,16 +30,30 @@ interface User {
   usuario: string;
   telefone?: string;
   avatar?: string;
-  dataNascimento: string;
+  dataNascimento?: string | null;
   signUpProvider: string;
   isPasswordEnabled: boolean;
+}
+
+interface GoogleData {
+  nome: string;
+  sobrenome: string;
+  email: string;
+  picture: string;
+}
+
+interface AuthError {
+  code?: string;
+  message?: string;
+  suggestedAction?: string;
+  googleData?: GoogleData;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (data: LoginData) => Promise<void>;
   signup: (data: SignupData) => Promise<void>;
-  loginGoogle: (token: string) => Promise<void>;
+  authGoogle: (token: string) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -53,6 +68,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   const login = async (data: LoginData): Promise<void> => {
     try {
@@ -65,6 +81,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         api.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${response.data.token}`;
+        router.push("/dashboard");
       }
     } catch (error) {
       throw error;
@@ -79,7 +96,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const response = await signupRequest(data);
 
       if (response.success) {
-       // redirect("/auth/login");
+        // redirect("/auth/login");
       }
     } catch (error) {
       throw error;
@@ -88,9 +105,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const loginGoogle = async (token: string): Promise<void> => {
+  const authGoogle = async (token: string): Promise<void> => {
     try {
-      const response = await googleLogin({ token });
+      setIsLoading(true);
+      const response = await googleAuth({ token });
       console.log("Login com Google:", response);
       if (response.success) {
         setUser(response.data.user);
@@ -98,15 +116,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         api.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${response.data.token}`;
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Erro ao fazer login com Google:", error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const logout = () => {
     setUser(null);
     removeAuthToken();
+    router.push("/auth/login");
+    api.defaults.headers.common["Authorization"] = "";
+    console.log("Usuário deslogado com sucesso");
   };
 
   const getProfile = async (): Promise<void> => {
@@ -130,7 +155,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     isLoading,
     isAuthenticated: !!user,
-    loginGoogle,
+    authGoogle,
   };
 
   useEffect(() => {

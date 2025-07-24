@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@/app/components/form/Button";
+import { GoogleButton } from "@/app/components/form/GoogleButton";
 import { Input } from "@/app/components/form/Input";
 import { LinkButton } from "@/app/components/form/LinkButton";
 import { Container } from "@/app/components/layout/Container";
@@ -17,7 +18,7 @@ const validationSchema = Yup.object({
 });
 
 export default function Login() {
-  const { login, loginGoogle } = useAuth();
+  const { login } = useAuth();
   const formik = useFormik({
     initialValues: {
       login: "",
@@ -113,22 +114,7 @@ export default function Login() {
                   Faça seu login com Google
                 </h6>
                 <div className="mt-6">
-                  <GoogleLogin
-                    onSuccess={(credentialResponse) => {
-                      console.log(
-                        "Token do Google:",
-                        credentialResponse.credential
-                      );
-                      if (!credentialResponse.credential) {
-                        console.error("Nenhum token recebido do Google");
-                        return;
-                      }
-                      loginGoogle(credentialResponse.credential);
-                    }}
-                    onError={() => {
-                      console.log("Erro no login");
-                    }}
-                  />
+                  <GoogleButton text="signin_with" />
                 </div>
               </div>
             </div>

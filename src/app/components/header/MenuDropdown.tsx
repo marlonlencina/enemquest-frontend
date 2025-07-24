@@ -1,9 +1,10 @@
 "use client";
 
-import { Icon } from "@iconify/react/dist/iconify.js";
+import { useAuth } from "@/context/useAuth";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import IconButton from "../layout/IconButton";
+import { MenuDropdownOption } from "./MenuDropdownOption";
 
 interface MenuDropdownInterface {
   handleMenuDropdownToggle: () => void;
@@ -13,9 +14,15 @@ export const MenuDropdown = ({
   handleMenuDropdownToggle,
 }: MenuDropdownInterface) => {
   const router = useRouter();
+  const { logout } = useAuth();
 
   const handleNavigate = (url: string) => {
     router.push(url);
+    handleMenuDropdownToggle();
+  };
+
+  const handleLogout = () => {
+    logout();
     handleMenuDropdownToggle();
   };
   return (
@@ -45,32 +52,16 @@ export const MenuDropdown = ({
         />
       </div>
       <ul className="w-full bg-WHITE flex flex-col border-t border-gray-200-custom">
-        <div onClick={() => handleNavigate("/dashboard/account")}>
-          <li className="w-full h-[56px] flex gap-4 items-center px-6 cursor-pointer group hover:bg-gray-200-custom transition-all">
-            <div className="flex items-center gap-4">
-              <Icon
-                icon={"lucide:user"}
-                className="text-body18 text-gray-500-custom group-hover:text-blue-primary transition-all"
-              />
-              <p className="font-button font-medium text-body16 text-black-custom group-hover:text-blue-primary transition-all">
-                Minha conta
-              </p>
-            </div>
-          </li>
-        </div>
-        <div onClick={handleMenuDropdownToggle}>
-          <li className="w-full h-[56px] flex gap-4 items-center px-6 cursor-pointer group hover:bg-gray-200-custom transition-all">
-            <div className="flex items-center gap-4">
-              <Icon
-                icon={"lucide:log-out"}
-                className="text-body18 text-gray-500-custom group-hover:text-blue-primary transition-all"
-              />
-              <p className="font-button font-medium text-body16 text-black-custom group-hover:text-blue-primary transition-all">
-                Logout
-              </p>
-            </div>
-          </li>
-        </div>
+        <MenuDropdownOption
+          icon="lucide:user"
+          label="Minha conta"
+          onClick={() => handleNavigate("/dashboard/account")}
+        />
+        <MenuDropdownOption
+          icon="lucide:log-out"
+          label="Logout"
+          onClick={() => handleLogout()}
+        />
       </ul>
     </div>
   );

@@ -47,6 +47,8 @@ export const clearLocalStorage = (): void => {
 // Funções específicas para autenticação
 export const saveAuthToken = (token: string): void => {
   saveToLocalStorage(FULL_LOCAL_STORAGE_KEY_TOKEN, token);
+  // Também salvar em cookie para o middleware
+  document.cookie = `auth-token=${token}; path=/; max-age=86400`;
 };
 
 export const getAuthToken = (): string | null => {
@@ -55,4 +57,6 @@ export const getAuthToken = (): string | null => {
 
 export const removeAuthToken = (): void => {
   removeFromLocalStorage(FULL_LOCAL_STORAGE_KEY_TOKEN);
+  // Também remover o cookie
+  document.cookie = `auth-token=; path=/; max-age=0`;
 };

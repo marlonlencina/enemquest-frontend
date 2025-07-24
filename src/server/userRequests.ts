@@ -16,16 +16,8 @@ export interface LoginData {
   senha: string;
 }
 
-export interface GoogleLoginData {
+export interface GoogleAuthData {
   token: string;
-}
-
-export interface GoogleSignupData {
-  token: string;
-  usuario: string;
-  telefone?: string;
-  dataNascimento: string;
-  avatar?: string;
 }
 
 // Interfaces para as respostas
@@ -41,13 +33,15 @@ export interface AuthResponse {
       usuario: string;
       telefone?: string;
       avatar?: string;
-      dataNascimento: string;
+      dataNascimento: string | null;
       signUpProvider: string;
       isPasswordEnabled: boolean;
     };
     token: string;
     expiresIn: string;
+    isNewUser?: boolean;
   };
+  code?: string;
 }
 
 export interface ApiErrorResponse {
@@ -77,29 +71,15 @@ export const login = async (data: LoginData): Promise<AuthResponse> => {
   }
 };
 
-export const googleLogin = async (
-  data: GoogleLoginData
+export const googleAuth = async (
+  data: GoogleAuthData
 ): Promise<AuthResponse> => {
   try {
-    const response = await api.post("/users/google/login", data);
+    const response = await api.post("/users/google/auth", data);
     return response.data;
   } catch (error: any) {
-    console.error("Error during Google login:", error);
-    throw error.response?.data || { message: "Erro ao fazer login com Google" };
-  }
-};
-
-export const googleSignup = async (
-  data: GoogleSignupData
-): Promise<AuthResponse> => {
-  try {
-    const response = await api.post("/users/google/signup", data);
-    return response.data;
-  } catch (error: any) {
-    console.error("Error during Google signup:", error);
-    throw (
-      error.response?.data || { message: "Erro ao fazer cadastro com Google" }
-    );
+    console.error("Error during Google auth:", error);
+    throw error.response?.data || { message: "Erro na autenticação com Google" };
   }
 };
 

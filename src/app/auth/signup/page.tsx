@@ -241,14 +241,7 @@ export default function Signup() {
                   Faça seu login com Google
                 </h6>
                 <div className="mt-6">
-                  <GoogleButton
-                    text="Cadastrar com Google"
-                    fullWidth
-                    onClick={() => {
-                      console.log("Login com Google");
-                      // Implementar lógica do Google OAuth
-                    }}
-                  />
+                  <GoogleButton text="signup_with" />
                 </div>
               </div>
             </div>

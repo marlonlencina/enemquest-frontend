@@ -1,13 +1,13 @@
-import { getAllAreas } from "@/server/requests";
+import { getAllAreas } from "@/server/generalRequests";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { Metadata } from "next";
+import { Header } from "../components/header";
 import AreaCard from "../components/layout/AreaCard";
 import { Container } from "../components/layout/Container";
-import { Header } from "../components/header";
+import { PageTitle } from "../components/layout/PageTitle";
 import SectionDescription from "../components/layout/SectionDescription";
 import SectionTitle from "../components/layout/SectionTitle";
 import StatCard from "../components/layout/StatCard";
-import { PageTitle } from "../components/layout/PageTitle";
 import { Area } from "../types/exam";
 import { getBgColorByArea } from "../utils/getBgColorByArea";
 
@@ -28,7 +28,6 @@ export default async function Dashboard() {
   let areas: Area[] = [];
   try {
     const dataAreas = await getAllAreas();
-    console.log("dataAreas", dataAreas);
     areas = dataAreas.data;
   } catch (error) {
     console.error("Error fetching last questions:", error);
@@ -74,9 +73,7 @@ export default async function Dashboard() {
               </div>
             </div>
             <div className="w-full mt-8">
-              <PageTitle>
-                Explore as áreas do ENEM
-              </PageTitle>
+              <PageTitle>Explore as áreas do ENEM</PageTitle>
               <div className="grid grid-cols-4 gap-6 mt-6">
                 {areas.map((area) => (
                   <AreaCard
