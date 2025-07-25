@@ -20,16 +20,18 @@
   --color-gray-100-custom: #f7f8f9;
   --color-gray-200-custom: #eff2f5;
   --color-gray-300-custom: #dee1e3;
-  --color-gray-400-custom: #B6B9BD;
+  --color-gray-400-custom: #b6b9bd;
   --color-gray-500-custom: #83878b;
 
   --color-black-custom: #090a0a;
-  --color-blue-primary-light: #23abd2;
+  --color-blue-primary-light: #0D7BDF;
   --color-blue-primary: #0a66b9;
-  --color-blue-primary-dark: #093863;
+  --color-blue-primary-dark: #0A5599;
   --color-pink-primary-light: #f783a6;
   --color-pink-primary: #f6769c;
   --color-pink-primary-dark: #f86892;
+
+  --color-blue-baby: #0a66b9;
 
   --color-mt-exam: #003da5;
   --color-cn-exam: #52c072;
@@ -75,5 +77,4 @@
   width: 100%;
   max-width: 1248px;
   margin: 0 auto;
-  padding: 0 16px;
 }

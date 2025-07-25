@@ -1,4 +1,5 @@
 import { api } from "./api";
+import { ErrorHandler } from "@/utils/errorHandler";
 
 // Interfaces para os dados de entrada
 export interface SignupData {
@@ -57,7 +58,7 @@ export const signup = async (data: SignupData): Promise<AuthResponse> => {
     return response.data;
   } catch (error: any) {
     console.error("Error during signup:", error);
-    throw error.response?.data || { message: "Erro ao fazer cadastro" };
+    throw ErrorHandler.fromApiResponse(error);
   }
 };
 
@@ -67,7 +68,7 @@ export const login = async (data: LoginData): Promise<AuthResponse> => {
     return response.data;
   } catch (error: any) {
     console.error("Error during login:", error);
-    throw error.response?.data || { message: "Erro ao fazer login" };
+    throw ErrorHandler.fromApiResponse(error);
   }
 };
 
@@ -79,7 +80,7 @@ export const googleAuth = async (
     return response.data;
   } catch (error: any) {
     console.error("Error during Google auth:", error);
-    throw error.response?.data || { message: "Erro na autenticação com Google" };
+    throw ErrorHandler.fromApiResponse(error);
   }
 };
 
@@ -92,7 +93,7 @@ export const getMyProfile = async (): Promise<{
     return response.data;
   } catch (error: any) {
     console.error("Error fetching profile:", error);
-    throw error.response?.data || { message: "Erro ao buscar perfil" };
+    throw ErrorHandler.fromApiResponse(error);
   }
 };
 
@@ -104,6 +105,6 @@ export const enablePassword = async (
     return response.data;
   } catch (error: any) {
     console.error("Error enabling password:", error);
-    throw error.response?.data || { message: "Erro ao definir senha" };
+    throw ErrorHandler.fromApiResponse(error);
   }
 };

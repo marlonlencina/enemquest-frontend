@@ -1,10 +1,10 @@
 "use client";
 
 import { useAuth } from "@/context/useAuth";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import IconButton from "../layout/IconButton";
 import { MenuDropdownOption } from "./MenuDropdownOption";
+import { Avatar } from "../Avatar";
 
 interface MenuDropdownInterface {
   handleMenuDropdownToggle: () => void;
@@ -14,6 +14,7 @@ export const MenuDropdown = ({
   handleMenuDropdownToggle,
 }: MenuDropdownInterface) => {
   const router = useRouter();
+  const { user } = useAuth();
   const { logout } = useAuth();
 
   const handleNavigate = (url: string) => {
@@ -29,19 +30,19 @@ export const MenuDropdown = ({
     <div className="absolute bg-white-custom w-[348px] top-[48px] right-0 border border-gray-300-custom rounded-md overflow-hidden">
       <div className="flex items-center gap-4 p-6 bg-white-custom justify-between">
         <div className="shrink-0 flex items-center gap-4 h-[42px] w-[42px] rounded-full">
-          <Image
-            width={48}
-            height={48}
-            className="shrink-0 rounded-full"
-            src={"https://github.com/marlonlencina.png"}
-            alt="Avatar"
+          <Avatar
+            src={user?.avatar}
+            alt="avatar"
+            className="rounded-full bg-white"
+            onClick={handleMenuDropdownToggle}
+            size={44}
           />
           <div>
             <p className="text-nowrap font-head font-semibold text-black-custom text-body16 leading-tight">
-              Marlon Lencina
+              {user?.nome} {user?.sobrenome}
             </p>
             <span className="font-body font-normal text-blue-primary text-body14 leading-tight">
-              @marlon
+              @{user?.usuario}
             </span>
           </div>
         </div>

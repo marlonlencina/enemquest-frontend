@@ -1,4 +1,6 @@
 import { AuthProvider } from "@/context/useAuth";
+import { ConfirmationProvider } from "@/context/useConfirmationDialog";
+import { GeneralExamInfoProvider } from "@/context/useGeneralExamInfo";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
@@ -37,11 +39,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body className={`w-full h-full bg-gray-100-custom ${manrope.className}`}>
+      <body className={`w-full h-full bg-gray-100-custom  ${manrope.className}`}>
         <Theme>
           <AuthProvider>
             <GoogleOAuthProvider clientId="365219771523-86ivnuc1iq7hmn8m23rth8119grvv1p0.apps.googleusercontent.com">
-              {children}
+              <GeneralExamInfoProvider>
+                <ConfirmationProvider>{children}</ConfirmationProvider>
+              </GeneralExamInfoProvider>
             </GoogleOAuthProvider>
           </AuthProvider>
         </Theme>

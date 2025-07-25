@@ -13,6 +13,7 @@ import {
   SignupData,
   signup as signupRequest,
 } from "@/server/userRequests";
+import { useErrorHandler } from "@/utils/errorHandler";
 import { useRouter } from "next/navigation";
 import React, {
   createContext,
@@ -35,20 +36,6 @@ interface User {
   isPasswordEnabled: boolean;
 }
 
-interface GoogleData {
-  nome: string;
-  sobrenome: string;
-  email: string;
-  picture: string;
-}
-
-interface AuthError {
-  code?: string;
-  message?: string;
-  suggestedAction?: string;
-  googleData?: GoogleData;
-}
-
 interface AuthContextType {
   user: User | null;
   login: (data: LoginData) => Promise<void>;
@@ -69,6 +56,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const { handleError } = useErrorHandler();
 
   const login = async (data: LoginData): Promise<void> => {
     try {
@@ -84,7 +72,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         router.push("/dashboard");
       }
     } catch (error) {
-      throw error;
+      const { error: apiError, requiresLogout } = handleError(error);
+
+      if (requiresLogout) {
+        logout();
+      }
+
+      throw apiError;
     } finally {
       setIsLoading(false);
     }
@@ -94,12 +88,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       setIsLoading(true);
       const response = await signupRequest(data);
-
       if (response.success) {
-        // redirect("/auth/login");
+        router.push("/auth/login");
       }
     } catch (error) {
-      throw error;
+      const { error: apiError } = handleError(error);
+      throw apiError;
     } finally {
       setIsLoading(false);
     }
@@ -120,7 +114,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error) {
       console.error("Erro ao fazer login com Google:", error);
-      throw error;
+      const { error: apiError, requiresLogout } = handleError(error);
+
+      if (requiresLogout) {
+        logout();
+      }
+
+      throw apiError;
     } finally {
       setIsLoading(false);
     }
@@ -138,10 +138,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await getMyProfile();
       if (response.success) {
-        console.log("dados persistidos:", response.data);
         setUser(response.data);
-      } else {
-        logout();
       }
     } catch (error) {
       console.error("Erro ao buscar perfil:", error);
@@ -161,10 +158,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const token = getAuthToken();
     if (token) {
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       getProfile();
     }
   }, []);
+
+   useEffect(() => {
+    const handleAuthLogout = () => {
+      logout()
+    };
+
+    // Escutar evento customizado disparado pelo interceptor
+    if (typeof window !== 'undefined') {
+      window.addEventListener('auth:logout', handleAuthLogout);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('auth:logout', handleAuthLogout);
+      }
+    };
+  }, [router]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

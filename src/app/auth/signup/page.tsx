@@ -1,11 +1,15 @@
 "use client";
 import { Button } from "@/app/components/form/Button";
 import { GoogleButton } from "@/app/components/form/GoogleButton";
+import { HelperMessage } from "@/app/components/form/HelperMessage";
 import { Input } from "@/app/components/form/Input";
 import { LinkButton } from "@/app/components/form/LinkButton";
 import { Container } from "@/app/components/layout/Container";
 import { Logo } from "@/app/components/layout/Logo";
+import { useAuth } from "@/context/useAuth";
+import { useErrorHandler } from "@/utils/errorHandler";
 import { useFormik } from "formik";
+import { useState } from "react";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
@@ -43,6 +47,9 @@ const validationSchema = Yup.object({
 });
 
 export default function Signup() {
+  const { signup } = useAuth();
+  const { handleError, applyValidationErrors } = useErrorHandler();
+  const [serverError, setServerError] = useState<string | null>(null);
   const formik = useFormik({
     initialValues: {
       nome: "",
@@ -55,8 +62,30 @@ export default function Signup() {
       confirmacaoSenha: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Signup values:", values);
+    onSubmit: async (values) => {
+      setServerError(null);
+      try {
+        await signup({
+          nome: values.nome,
+          sobrenome: values.sobrenome,
+          email: values.email,
+          usuario: values.usuario,
+          telefone: values.telefone,
+          dataNascimento: values.dataNascimento,
+          senha: values.senha,
+        });
+      } catch (error) {
+        const { isValidationError, validationErrors, message } =
+          handleError(error);
+        if (isValidationError && validationErrors.length > 0) {
+          // Aplica erros de validação do servidor nos campos
+          applyValidationErrors(formik, validationErrors);
+          setServerError(null); // Remove erro geral se há erros específicos por campo
+        } else {
+          // Erro geral (não de validação)
+          setServerError(message);
+        }
+      }
     },
   });
   return (
@@ -70,7 +99,8 @@ export default function Signup() {
                 Vamos lá, <b>faça seu cadastro</b>
               </h6>
             </div>
-            <div className="w-full p-6">
+            <div className="w-full p-6 flex flex-col gap-6">
+              <HelperMessage message={serverError} showIcon variant="error" />
               <div className="">
                 <h6 className="font-head text-body16 font-semibold text-black-custom font-normal">
                   Cadastre-se com seus dados
@@ -229,14 +259,14 @@ export default function Signup() {
                   </div>
                 </form>
               </div>
-              <div className="mt-6 flex items-center gap-4">
+              <div className="flex items-center gap-4">
                 <div className="w-full h-[1px] bg-gray-200-custom"></div>
                 <span className="px-6 font-body font-normal text-sm12 text-gray-400-custom">
                   ou
                 </span>
                 <div className="w-full h-[1px] bg-gray-200-custom"></div>
               </div>
-              <div className="mt-6">
+              <div className="">
                 <h6 className="font-head text-body16 font-semibold text-black-custom ">
                   Faça seu login com Google
                 </h6>

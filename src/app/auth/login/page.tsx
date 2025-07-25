@@ -1,13 +1,15 @@
 "use client";
 import { Button } from "@/app/components/form/Button";
 import { GoogleButton } from "@/app/components/form/GoogleButton";
+import { HelperMessage } from "@/app/components/form/HelperMessage";
 import { Input } from "@/app/components/form/Input";
 import { LinkButton } from "@/app/components/form/LinkButton";
 import { Container } from "@/app/components/layout/Container";
 import { Logo } from "@/app/components/layout/Logo";
 import { useAuth } from "@/context/useAuth";
-import { GoogleLogin } from "@react-oauth/google";
+import { useErrorHandler } from "@/utils/errorHandler";
 import { useFormik } from "formik";
+import { useState } from "react";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
@@ -19,6 +21,8 @@ const validationSchema = Yup.object({
 
 export default function Login() {
   const { login } = useAuth();
+  const { handleError, applyValidationErrors } = useErrorHandler();
+  const [serverError, setServerError] = useState<string | null>(null);
   const formik = useFormik({
     initialValues: {
       login: "",
@@ -29,11 +33,23 @@ export default function Login() {
     validateOnChange: false,
     validationSchema,
     onSubmit: async (values) => {
-      console.log("Login values:", values);
-      await login({
-        login: values.login,
-        senha: values.password,
-      });
+      setServerError(null);
+      try {
+        await login({
+          login: values.login,
+          senha: values.password,
+        });
+      } catch (error: any) {
+        const { isValidationError, validationErrors, message } =
+          handleError(error);
+
+        if (isValidationError && validationErrors.length > 0) {
+          applyValidationErrors(formik, validationErrors);
+          setServerError(null);
+        } else {
+          setServerError(message);
+        }
+      }
     },
   });
   return (
@@ -47,7 +63,8 @@ export default function Login() {
                 Bem-vindo, <b>faça seu login</b>
               </h6>
             </div>
-            <div className="w-full p-6">
+            <div className="w-full p-6 flex flex-col gap-6">
+              <HelperMessage message={serverError} showIcon variant="error" />
               <div className="">
                 <h6 className="font-head text-body16 font-semibold text-black-custom font-normal">
                   Entre com e-mail/usuário e senha
@@ -102,14 +119,14 @@ export default function Login() {
                   </div>
                 </form>
               </div>
-              <div className="mt-6 flex items-center gap-4">
+              <div className="flex items-center gap-4">
                 <div className="w-full h-[1px] bg-gray-200-custom"></div>
                 <span className="px-6 font-body font-normal text-sm12 text-gray-400-custom">
                   ou
                 </span>
                 <div className="w-full h-[1px] bg-gray-200-custom"></div>
               </div>
-              <div className="mt-6">
+              <div className="">
                 <h6 className="font-head text-body16 font-semibold text-black-custom ">
                   Faça seu login com Google
                 </h6>

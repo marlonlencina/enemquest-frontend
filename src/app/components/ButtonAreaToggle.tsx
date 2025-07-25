@@ -9,6 +9,8 @@ export interface ButtonAreaToggleProps {
   isNumberAllowed?: boolean; // Optional prop to allow number input
   allowCompetence?: boolean; // Optional prop to show competence multi-select
   allowHability?: boolean; // Optional prop to show hability multi-select
+  onQuantityChange?: (quantity: number) => void; // Callback for quantity changes
+  currentQuantity?: number; // Current quantity value
 }
 
 export const AreaSectionOptions = ({
@@ -19,6 +21,8 @@ export const AreaSectionOptions = ({
   isNumberAllowed = true,
   allowCompetence = true,
   allowHability = true,
+  onQuantityChange,
+  currentQuantity = 0,
 }: ButtonAreaToggleProps) => {
   const [selectedCompetencias, setSelectedCompetencias] = useState<string[]>([]);
   const [selectedHabilidades, setSelectedHabilidades] = useState<string[]>([]);
@@ -66,6 +70,11 @@ export const AreaSectionOptions = ({
           <input
             type="number"
             placeholder="Insira o número de questões"
+            value={currentQuantity || ""}
+            onChange={(e) => {
+              const value = parseInt(e.target.value) || 0;
+              onQuantityChange?.(value);
+            }}
             className="w-full h-full border-none outline-none font-body text-body16 text-black-custom placeholder:text-gray-400-custom"
           />
         </div>

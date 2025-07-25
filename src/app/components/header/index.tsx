@@ -1,18 +1,20 @@
 "use client";
 
-import Image from "next/image";
+import { useAuth } from "@/context/useAuth";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import IconButton from "./../layout/IconButton";
-import { Logo } from "./../layout/Logo";
-import { NavLink } from "./NavLink";
+import { Avatar } from "../Avatar";
+import { Logo } from "../layout/Logo";
 import { MenuDropdown } from "./MenuDropdown";
+import { NavLink } from "./NavLink";
+import { Container } from "../layout/Container";
 
 export const Header = ({
   variant = "default",
 }: {
   variant?: "colored" | "default";
 }) => {
+  const { user } = useAuth();
   const menuDropdownRef = useRef<HTMLDivElement | null>(null);
   const [isMenuDropdownOpen, setIsMenuDropdownOpen] = useState(false);
   const handleMenuDropdownToggle = () => {
@@ -40,7 +42,7 @@ export const Header = ({
   return (
     <header className={`h-[72px] w-full`}>
       <div className=" w-full fixed top-0 left-0 right-0 z-50">
-        <div className="container h-[72px] flex items-center justify-between bg-gray-200-custom">
+        <Container className=" h-[72px] flex items-center justify-between bg-gray-200-custom">
           <div className="flex items-center gap-6 bg-white-custom h-full px-6">
             <Link href={"/dashboard"}>
               <Logo logoTextColor="#090A0A" />
@@ -57,15 +59,16 @@ export const Header = ({
                 iconName={"lucide:bell"}
                 onClick={() => {}}
               /> */}
-              <div ref={menuDropdownRef} className="relative cursor-pointer transition-all">
-                <Image
-                  width={36}
-                  height={36}
+              <div
+                ref={menuDropdownRef}
+                className="relative cursor-pointer transition-all"
+              >
+                <Avatar
+                  src={user?.avatar}
                   alt="avatar"
-                  src={"https://github.com/marlonlencina.png"}
                   className="rounded-full bg-white"
                   onClick={handleMenuDropdownToggle}
-                ></Image>
+                />
                 {isMenuDropdownOpen && (
                   <MenuDropdown
                     handleMenuDropdownToggle={handleMenuDropdownToggle}
@@ -74,7 +77,7 @@ export const Header = ({
               </div>
             </div>
           </div>
-        </div>
+        </Container>
       </div>
     </header>
   );

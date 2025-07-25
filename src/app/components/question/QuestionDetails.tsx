@@ -1,6 +1,6 @@
-import IconButton from "./../layout/IconButton";
-import SubjectBadge, { SubjectCode } from "./../layout/SubjectBadge";
-import TextButton from "./../layout/TextButton";
+import IconButton from "../layout/IconButton";
+import SubjectBadge, { SubjectCode } from "../layout/SubjectBadge";
+import TextButton from "../layout/TextButton";
 
 interface QuestionDetailsProps {
   title: string;
@@ -10,12 +10,12 @@ interface QuestionDetailsProps {
   actionsDisabled?: boolean;
 }
 
-export const QuestionDetails = ({ 
-  title, 
-  questionNumber, 
-  questionId, 
+export const QuestionDetails = ({
+  title,
+  questionNumber,
+  questionId,
   subjectCode,
-  actionsDisabled = false
+  actionsDisabled = false,
 }: QuestionDetailsProps) => {
   return (
     <div className="bg-white-custom rounded-lg p-6 w-full">
@@ -38,24 +38,12 @@ export const QuestionDetails = ({
       {!actionsDisabled && (
         <div className="w-full mt-6 flex items-center justify-between ">
           <div className="w-full flex items-center gap-2">
-            <IconButton
-              onClick={() => {}}
-              iconName={"mdi:star-outline"}
-            />
-            <IconButton
-              onClick={() => {}}
-              iconName={"mdi:share-variant"}
-            />
-            <IconButton
-              onClick={() => {}}
-              iconName={"lucide:download"}
-            />
+            <IconButton onClick={() => {}} iconName={"mdi:star-outline"} />
+            <IconButton onClick={() => {}} iconName={"mdi:share-variant"} />
+            <IconButton onClick={() => {}} iconName={"lucide:download"} />
           </div>
           <div className="shrink-0">
-            <TextButton
-              onClick={() => {}}
-              text="Adicionar a uma lista"
-            />
+            <TextButton onClick={() => {}} text="Adicionar a uma lista" />
           </div>
         </div>
       )}

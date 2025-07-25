@@ -35,15 +35,6 @@ export const removeFromLocalStorage = (key: string): void => {
   }
 };
 
-// Função para limpar todo o localStorage
-export const clearLocalStorage = (): void => {
-  try {
-    localStorage.clear();
-  } catch (error) {
-    console.error("Erro ao limpar localStorage:", error);
-  }
-};
-
 // Funções específicas para autenticação
 export const saveAuthToken = (token: string): void => {
   saveToLocalStorage(FULL_LOCAL_STORAGE_KEY_TOKEN, token);

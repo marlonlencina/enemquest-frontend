@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export interface ButtonOptionToggleProps {
   title: string;
   description: string;
@@ -17,13 +15,14 @@ export const ButtonOptionToggle = ({
   onClick,
   className = "",
 }: ButtonOptionToggleProps) => {
-  const borderClass = isSelected 
-    ? "border-blue-primary-light" 
+  const borderClass = isSelected
+    ? "border-blue-primary-light"
     : "border-gray-100-custom hover:border-gray-200-custom";
 
   return (
     <button
-      className={`flex flex-col items-start p-6 rounded-lg border-2 ${borderClass} bg-white-custom transition-all ${className}`}
+      type="button"
+      className={`cursor-pointer flex flex-col items-start p-6 rounded-lg border-2 ${borderClass} bg-white-custom transition-all ${className}`}
       onClick={onClick}
     >
       <div className="flex items-center gap-2">
