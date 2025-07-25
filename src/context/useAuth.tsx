@@ -1,8 +1,8 @@
 "use client";
 import {
-  getAuthToken,
+  getAuthTokenFromCookie,
   removeAuthToken,
-  saveAuthToken,
+  saveAuthTokenToCookie,
 } from "@/config/localStorage";
 import { api } from "@/server/api";
 import {
@@ -65,10 +65,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (response.success) {
         setUser(response.data.user);
-        saveAuthToken(response.data.token);
-        api.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${response.data.token}`;
+        // Salvar token no cookie e definir header para próximas requisições
+        saveAuthTokenToCookie(response.data.token);
+        api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
         router.push("/dashboard");
       }
     } catch (error) {
@@ -106,10 +105,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log("Login com Google:", response);
       if (response.success) {
         setUser(response.data.user);
-        saveAuthToken(response.data.token);
-        api.defaults.headers.common[
-          "Authorization"
-        ] = `Bearer ${response.data.token}`;
+        // Salvar token no cookie e definir header para próximas requisições
+        saveAuthTokenToCookie(response.data.token);
+        api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
         router.push("/dashboard");
       }
     } catch (error) {
@@ -127,10 +125,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const logout = () => {
+    // Limpar estado do usuário
     setUser(null);
+    
+    // Remover cookie de autenticação
     removeAuthToken();
+    
+    // Limpar header Authorization do axios
+    delete api.defaults.headers.common["Authorization"];
+    
+    // Redirecionar para login
     router.push("/auth/login");
-    api.defaults.headers.common["Authorization"] = "";
+    
     console.log("Usuário deslogado com sucesso");
   };
 
@@ -142,6 +148,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error) {
       console.error("Erro ao buscar perfil:", error);
+      // Se erro de autenticação, fazer logout automático
+      const { requiresLogout } = handleError(error);
+      if (requiresLogout) {
+        logout();
+      }
     }
   };
 
@@ -156,10 +167,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    const token = getAuthToken();
-    if (token) {
-      getProfile();
-    }
+    const initializeAuth = async () => {
+      try {
+        const token = getAuthTokenFromCookie();
+        if (token) {
+          setIsLoading(true);
+          await getProfile();
+        }
+      } catch (error) {
+        console.error("Erro na inicialização da autenticação:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
    useEffect(() => {

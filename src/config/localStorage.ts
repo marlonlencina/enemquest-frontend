@@ -1,6 +1,4 @@
-const LOCAL_STORAGE_BASE_KEY = "@enemquest_production_localStorage";
-const TOKEN_NAME = "authToken";
-const FULL_LOCAL_STORAGE_KEY_TOKEN = `${LOCAL_STORAGE_BASE_KEY}/${TOKEN_NAME}`;
+// Removida constante não utilizada LOCAL_STORAGE_BASE_KEY
 
 // Função genérica para salvar dados no localStorage
 export const saveToLocalStorage = <T>(key: string, value: T): void => {
@@ -35,19 +33,29 @@ export const removeFromLocalStorage = (key: string): void => {
   }
 };
 
-// Funções específicas para autenticação
-export const saveAuthToken = (token: string): void => {
-  saveToLocalStorage(FULL_LOCAL_STORAGE_KEY_TOKEN, token);
-  // Também salvar em cookie para o middleware
-  document.cookie = `auth-token=${token}; path=/; max-age=86400`;
+// Funções para gerenciar cookies de autenticação
+export const getAuthTokenFromCookie = (): string | null => {
+  if (typeof document === 'undefined') return null;
+  
+  const cookies = document.cookie.split(';');
+  const authCookie = cookies.find(cookie => 
+    cookie.trim().startsWith('auth-token=')
+  );
+  
+  if (!authCookie) return null;
+  
+  return authCookie.split('=')[1] || null;
 };
 
-export const getAuthToken = (): string | null => {
-  return getFromLocalStorage<string>(FULL_LOCAL_STORAGE_KEY_TOKEN);
+export const saveAuthTokenToCookie = (token: string): void => {
+  if (typeof document !== 'undefined') {
+    document.cookie = `auth-token=${token}; path=/; max-age=86400`; // 24h
+  }
 };
 
 export const removeAuthToken = (): void => {
-  removeFromLocalStorage(FULL_LOCAL_STORAGE_KEY_TOKEN);
-  // Também remover o cookie
-  document.cookie = `auth-token=; path=/; max-age=0`;
+  // Remover apenas o cookie
+  if (typeof document !== 'undefined') {
+    document.cookie = `auth-token=; path=/; max-age=0`;
+  }
 };

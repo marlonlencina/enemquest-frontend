@@ -108,3 +108,21 @@ export const enablePassword = async (
     throw ErrorHandler.fromApiResponse(error);
   }
 };
+
+export const validateToken = async (): Promise<{
+  success: boolean;
+  data: {
+    userId: string;
+    email: string;
+    usuario: string;
+    isValid: boolean;
+  };
+}> => {
+  try {
+    const response = await api.get("/users/validate-token");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error validating token:", error);
+    throw ErrorHandler.fromApiResponse(error);
+  }
+};

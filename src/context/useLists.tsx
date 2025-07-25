@@ -19,6 +19,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useAuth } from "./useAuth";
 
 interface ListsContextType {
   // Estado
@@ -58,6 +59,7 @@ export function ListsProvider({ children }: ListsProviderProps) {
   const [isLoadingStats, setIsLoadingStats] = useState(false);
 
   const { handleError } = useErrorHandler();
+  const { isAuthenticated, user } = useAuth();
 
   // Buscar listas do usuário
   const fetchLists = useCallback(async () => {
@@ -154,6 +156,14 @@ export function ListsProvider({ children }: ListsProviderProps) {
     [handleError, fetchUserStats]
   );
 
+  // Limpar estado (usado no logout)
+  const clearListsState = useCallback(() => {
+    setLists([]);
+    setUserStats(null);
+    setIsLoadingLists(false);
+    setIsLoadingStats(false);
+  }, []);
+
   // Atualizar listas e estatísticas
   const refreshListsAndStats = useCallback(async () => {
     await Promise.all([fetchLists(), fetchUserStats()]);
@@ -174,9 +184,30 @@ export function ListsProvider({ children }: ListsProviderProps) {
     [lists]
   );
 
-  // Carregar dados iniciais
+  // Gerenciar estado baseado na autenticação
   useEffect(() => {
-    refreshListsAndStats();
+    if (isAuthenticated && user) {
+      refreshListsAndStats();
+    } else {
+      clearListsState();
+    }
+  }, [isAuthenticated]);
+
+  // Escutar evento de logout para limpeza imediata
+  useEffect(() => {
+    const handleAuthLogout = () => {
+      clearListsState();
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('auth:logout', handleAuthLogout);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('auth:logout', handleAuthLogout);
+      }
+    };
   }, []);
 
   const contextValue: ListsContextType = {

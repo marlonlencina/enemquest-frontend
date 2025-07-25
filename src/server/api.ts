@@ -1,14 +1,14 @@
-import { getAuthToken, removeAuthToken } from "@/config/localStorage";
+import { getAuthTokenFromCookie, removeAuthToken } from "@/config/localStorage";
 import axios from "axios";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3002",
 });
 
-// Interceptor para adicionar token automaticamente
+// Interceptor para adicionar token do cookie como Bearer Token
 api.interceptors.request.use(
   (config) => {
-    const token = getAuthToken();
+    const token = getAuthTokenFromCookie();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -31,11 +31,7 @@ api.interceptors.response.use(
       
       // Códigos que indicam token inválido/expirado
       if (errorCode === 'AUTH_102') {
-        console.log('Token expirado ou inválido, fazendo logout...');
-        
-        // Limpar token do localStorage
-        removeAuthToken();
-        
+        console.log('Token expirado ou inválido, fazendo logout...');        
         // Disparar evento customizado para notificar o contexto
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('auth:logout'));
