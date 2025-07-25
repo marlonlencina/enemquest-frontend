@@ -1,51 +1,12 @@
+import { List, ListStats } from "@/types/list";
 import { api } from "./api";
 
 // Interfaces para tipos de dados
-export interface List {
-  id: string;
-  nome: string;
-  status: string;
-  userId: string;
-  questoes?: ListQuestao[];
-  numeroQuestoes?: number;
-  areas: string[];
-}
 
-export interface ListQuestao {
-  id: string;
-  ordem: number | null;
-  acertou: boolean | null;
-  alternativaSelecionada: string | null;
-  questao: {
-    id: string;
-    codigoINEP: string;
-    ano: number;
-    prova: string;
-    aplicacao: string;
-    posicao: number;
-    gabarito: string;
-    imagemUrl: string | null;
-    temImagem: boolean;
-    habilidade: {
-      codigo: string;
-      descricao: string;
-      competencia: {
-        codigo: string;
-        descricao: string;
-        area: {
-          nome: string;
-        };
-      };
-    };
-  };
-}
-
-export interface ListStats {
-  total: number;
-  respondidas: number;
-  acertos: number;
-  erros: number;
-  percentualAcerto: number;
+export interface UserStats {
+  totalQuestoesRespondidas: number;
+  totalListasPendentes: number;
+  totalListasFinalizadas: number;
 }
 
 // Interfaces para dados de entrada
@@ -280,6 +241,20 @@ export const getListStats = async (
     throw (
       error.response?.data || {
         message: "Erro ao buscar estatísticas da lista",
+      }
+    );
+  }
+};
+
+export const getUserStats = async (): Promise<ApiResponse<UserStats>> => {
+  try {
+    const response = await api.get("/lists/user/stats");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching user stats:", error);
+    throw (
+      error.response?.data || {
+        message: "Erro ao buscar estatísticas do usuário",
       }
     );
   }

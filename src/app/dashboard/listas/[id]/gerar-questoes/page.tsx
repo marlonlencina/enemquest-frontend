@@ -1,12 +1,12 @@
 "use client";
 
-import { AreaSectionOptions } from "@/app/components/ButtonAreaToggle";
 import { Button } from "@/app/components/form/Button";
 import { Input } from "@/app/components/form/Input";
 import { Switch } from "@/app/components/form/Switch";
 import { AreaKnowledgeButton } from "@/app/components/layout/AreaKnowledgeGrid";
 import { PageTitle } from "@/app/components/layout/PageTitle";
 import SectionTitle from "@/app/components/layout/SectionTitle";
+import { AreaSectionOptions } from "@/app/components/listas/ButtonAreaToggle";
 import { useGeneralExamInfo } from "@/context/useGeneralExamInfo";
 import { generateQuestionsForList } from "@/server/listRequests";
 import { useFormik } from "formik";

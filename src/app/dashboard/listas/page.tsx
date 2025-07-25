@@ -1,6 +1,5 @@
 "use client";
 
-import { ButtonOptionToggle } from "@/app/components/ButtonOptionToggle";
 import { Button } from "@/app/components/form/Button";
 import { Input } from "@/app/components/form/Input";
 import {
@@ -9,15 +8,13 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/app/components/layout/dialog";
-import {
-  createList,
-  deleteList,
-  getMyLists,
-  List,
-} from "@/server/listRequests";
+import { ButtonOptionToggle } from "@/app/components/listas/ButtonOptionToggle";
+import { useConfirmation } from "@/context/useConfirmationDialog";
+import { useLists, useListsStats } from "@/context/useLists";
+import { getListStatus } from "@/utils/getListStatus";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as Yup from "yup";
 import { ButtonStatCard } from "../../components/layout/ButtonStatCard";
 import { DataTable } from "../../components/layout/DataTable";
@@ -30,7 +27,6 @@ import { TableCell } from "../../components/layout/TableCell";
 import { TableHeader } from "../../components/layout/TableHeader";
 import { TableHeaderCell } from "../../components/layout/TableHeaderCell";
 import { TableRow } from "../../components/layout/TableRow";
-import { useConfirmation } from "@/context/useConfirmationDialog";
 
 const createListValidationSchema = Yup.object({
   nome: Yup.string()
@@ -42,13 +38,38 @@ const createListValidationSchema = Yup.object({
     .required("Selecione o tipo da lista"),
 });
 
+const editListValidationSchema = Yup.object({
+  nome: Yup.string()
+    .min(3, "Nome deve ter pelo menos 3 caracteres")
+    .max(50, "Nome deve ter no máximo 50 caracteres")
+    .required("Nome da lista é obrigatório"),
+});
+
 export default function Dashboard() {
   const router = useRouter();
+  const { lists, deleteExistingList, createNewList, updateExistingList } =
+    useLists();
+  const { userStats } = useListsStats();
   const { confirm } = useConfirmation();
 
   const [isDialogCreatedListOpen, setIsDialogCreatedListOpen] = useState(false);
   const handleDialogOpenChange = () => {
     setIsDialogCreatedListOpen((state) => !state);
+  };
+
+  const [isDialogEditListOpen, setIsDialogEditListOpen] = useState(false);
+  const handleDialogEditOpenChange = () => {
+    setIsDialogEditListOpen((state) => !state);
+  };
+  const handleDialogEdit = (listId: string) => {
+    const list = lists.find((list) => list.id === listId);
+    if (list) {
+      formikEdit.setValues({
+        nome: list.nome,
+        id: list.id,
+      });
+      setIsDialogEditListOpen(true);
+    }
   };
 
   const formik = useFormik({
@@ -62,16 +83,19 @@ export default function Dashboard() {
     onSubmit: async (values, { setSubmitting }) => {
       try {
         console.log("Criando lista com os valores:", values);
-        const response = await createList({
+        const list = await createNewList({
           nome: values.nome,
         });
-        if (response.success && response.data) {
-          console.log("Lista criada com sucesso:", response.data);
-          if (values.tipo === "predefinida") {
-            router.push(`/dashboard/listas/${response.data.id}/gerar-questoes`);
-          } else {
-            router.push(`/dashboard/listas/${response.data.id}`);
-          }
+
+        if (!list) {
+          console.error("Erro ao criar lista: resposta inválida");
+          return;
+        }
+
+        if (values.tipo === "predefinida") {
+          router.push(`/dashboard/listas/${list.id}/gerar-questoes`);
+        } else {
+          router.push(`/dashboard/listas/${list.id}`);
         }
       } catch (error: any) {
         console.error("Erro ao criar lista:", error);
@@ -80,17 +104,27 @@ export default function Dashboard() {
     },
   });
 
-  const [lists, setLists] = useState<List[]>([]);
-  const handleGetLists = async () => {
-    try {
-      const response = await getMyLists();
-      if (response.success && response.data) {
-        setLists(response.data);
+  const formikEdit = useFormik({
+    initialValues: {
+      id: "",
+      nome: "",
+    },
+    validationSchema: editListValidationSchema,
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        await updateExistingList(values.id, {
+          nome: values.nome,
+        });
+        console.log("Editando lista com os valores:", values);
+        console.log("Lista editada com sucesso:", values);
+        handleDialogEditOpenChange();
+      } catch (error: any) {
+        console.error("Erro ao editar lista:", error);
+      } finally {
+        setSubmitting(false);
       }
-    } catch (error) {
-      console.error("Erro ao buscar listas:", error);
-    }
-  };
+    },
+  });
 
   const handleDeleteList = async (listId: string) => {
     try {
@@ -101,23 +135,12 @@ export default function Dashboard() {
         cancelText: "Cancelar",
       });
       if (confirmed) {
-        await deleteList(listId);
-        setLists((prevLists) => prevLists.filter((list) => list.id !== listId));
+        await deleteExistingList(listId);
       }
     } catch (error) {
       console.log("Erro ao deletar lista:", error);
     }
   };
-
-  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
-    useState(false);
-  const handleToggleDialogConfirmation = () => {
-    setIsConfirmationDialogOpen((state) => !state);
-  };
-
-  useEffect(() => {
-    handleGetLists();
-  }, []);
 
   return (
     <>
@@ -125,18 +148,26 @@ export default function Dashboard() {
         <PageTitle>Listas</PageTitle>
         <div className="grid grid-cols-4 gap-6 mt-6">
           <StatCard
-            number="3832"
+            number={
+              userStats?.totalQuestoesRespondidas
+                ? `${userStats.totalQuestoesRespondidas}`
+                : "0"
+            }
             text="Questões Respondidas"
             icon="lucide:check-circle"
             iconColor="text-success"
           />
           <StatCard
-            number={lists.length.toString()}
+            number={lists.length ? `${lists.length}` : "0"}
             icon="lucide:clipboard-list"
             text="Listas criadas"
           />
           <StatCard
-            number="2"
+            number={
+              userStats?.totalListasFinalizadas
+                ? `${userStats.totalListasFinalizadas}`
+                : "0"
+            }
             icon="lucide:clipboard-list"
             text="Listas finalizadas"
           />
@@ -174,14 +205,14 @@ export default function Dashboard() {
                     <TableCell className="px-6">
                       <SubjectBadge codigo="MT" />
                     </TableCell>
-                    <TableCell>{list.status}</TableCell>
+                    <TableCell>{getListStatus(list.status)}</TableCell>
                     <TableCell className="px-6 w-auto">
                       <ListActions
                         iconButtons={[
                           {
                             type: "icon",
                             iconName: "lucide:pen",
-                            onClick: () => console.log("edit list"),
+                            onClick: () => handleDialogEdit(list.id),
                           },
                           {
                             type: "icon",
@@ -199,7 +230,7 @@ export default function Dashboard() {
                           {
                             type: "text",
                             text: "Iniciar",
-                            onClick: () => console.log("start list"),
+                            onClick: () => {},
                           },
                         ]}
                       />
@@ -273,6 +304,52 @@ export default function Dashboard() {
                 onClick={handleDialogOpenChange}
               />
               <Button fullWidth text="Criar" type="submit" variant="primary" />
+            </DialogButtonsWrapper>
+          </form>
+        </div>
+      </DialogBody>
+      <DialogBody
+        open={isDialogEditListOpen}
+        onOpenChange={handleDialogEditOpenChange}
+      >
+        <div className="p-6">
+          <div className="flex flex-col gap-2">
+            <DialogTitle>Edite sua lista</DialogTitle>
+            <DialogDescription>
+              Edite as informações da sua lista
+            </DialogDescription>
+          </div>
+          <form
+            onSubmit={formikEdit.handleSubmit}
+            className="flex flex-col gap-6 mt-6"
+            action=""
+          >
+            <div>
+              <Input
+                label="Nome da lista"
+                placeholder="Digite o nome da sua lista"
+                name="nome"
+                id="nome"
+                type="text"
+                value={formikEdit.values.nome}
+                onChange={formikEdit.handleChange}
+                error={
+                  formikEdit.touched.nome && formikEdit.errors.nome
+                    ? formikEdit.errors.nome
+                    : ""
+                }
+                onBlur={formikEdit.handleBlur}
+              />
+            </div>
+            <DialogButtonsWrapper>
+              <Button
+                fullWidth
+                text="Cancelar"
+                type="button"
+                variant="secondary"
+                onClick={handleDialogEditOpenChange}
+              />
+              <Button fullWidth text="Editar" type="submit" variant="primary" />
             </DialogButtonsWrapper>
           </form>
         </div>

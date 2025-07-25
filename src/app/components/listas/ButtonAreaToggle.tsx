@@ -1,5 +1,5 @@
-import { MultiSelect, MultiSelectOption } from "./form/MultiSelect";
 import { useState } from "react";
+import { MultiSelect, MultiSelectOption } from "../form/MultiSelect";
 
 export interface ButtonAreaToggleProps {
   text: string;

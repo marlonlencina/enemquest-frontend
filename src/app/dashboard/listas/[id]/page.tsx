@@ -6,10 +6,10 @@ import SectionTitle from "@/app/components/layout/SectionTitle";
 import { useConfirmation } from "@/context/useConfirmationDialog";
 import {
   getListById,
-  List,
   removeQuestionFromList,
 } from "@/server/listRequests";
 import { getCompetenciaCode, getHabilidadeCode } from "@/utils/getCode";
+import { getListStatus } from "@/utils/getListStatus";
 import { useRouter } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import { ButtonStatCard } from "../../../components/layout/ButtonStatCard";
@@ -25,6 +25,7 @@ import { TableCell } from "../../../components/layout/TableCell";
 import { TableHeader } from "../../../components/layout/TableHeader";
 import { TableHeaderCell } from "../../../components/layout/TableHeaderCell";
 import { TableRow } from "../../../components/layout/TableRow";
+import { List } from "@/types/list";
 
 interface PageProps {
   params: Promise<{
@@ -104,7 +105,10 @@ export default function ListDetails({ params }: PageProps) {
             number={list?.questoes?.length ? `${list.questoes.length}` : ""}
             text="Questões na lista"
           />
-          <StatCard number={list?.status || ""} text="Status da lista" />
+          <StatCard
+            number={list?.status ? getListStatus(list.status) : ""}
+            text="Status da lista"
+          />
           <ButtonStatCard
             text="Gerar questões"
             icon="lucide:plus"

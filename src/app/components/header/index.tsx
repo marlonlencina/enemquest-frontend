@@ -3,11 +3,11 @@
 import { useAuth } from "@/context/useAuth";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Avatar } from "../Avatar";
 import { Logo } from "../layout/Logo";
 import { MenuDropdown } from "./MenuDropdown";
 import { NavLink } from "./NavLink";
 import { Container } from "../layout/Container";
+import { Avatar } from "../layout/Avatar";
 
 export const Header = ({
   variant = "default",

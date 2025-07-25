@@ -4,7 +4,7 @@ import { useAuth } from "@/context/useAuth";
 import { useRouter } from "next/navigation";
 import IconButton from "../layout/IconButton";
 import { MenuDropdownOption } from "./MenuDropdownOption";
-import { Avatar } from "../Avatar";
+import { Avatar } from "../layout/Avatar";
 
 interface MenuDropdownInterface {
   handleMenuDropdownToggle: () => void;

@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       </Container>
       <footer className="">
         <Container>
-          <div className="w-full bg-gray-300-custom py-12 px-6">
+          <div className="w-full bg-gray-300-custom h-[64px] flex items-center px-6">
             <div className="flex items-center gap-4 justify-between">
               <p className="font-body font-normal text-body14 text-black-custom">
                 © 2025 ENEMQuest. Versão 1.0.0.

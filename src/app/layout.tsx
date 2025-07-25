@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import type { Metadata } from "next";
 import { DM_Sans, Inter, Manrope } from "next/font/google";
 import "./globals.css";
+import { ListsProvider } from "@/context/useLists";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -39,13 +40,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body className={`w-full h-full bg-gray-100-custom  ${manrope.className}`}>
+      <body
+        className={`w-full h-full bg-gray-100-custom  ${manrope.className}`}
+      >
         <Theme>
           <AuthProvider>
             <GoogleOAuthProvider clientId="365219771523-86ivnuc1iq7hmn8m23rth8119grvv1p0.apps.googleusercontent.com">
-              <GeneralExamInfoProvider>
-                <ConfirmationProvider>{children}</ConfirmationProvider>
-              </GeneralExamInfoProvider>
+              <ListsProvider>
+                <GeneralExamInfoProvider>
+                  <ConfirmationProvider>{children}</ConfirmationProvider>
+                </GeneralExamInfoProvider>
+              </ListsProvider>
             </GoogleOAuthProvider>
           </AuthProvider>
         </Theme>
