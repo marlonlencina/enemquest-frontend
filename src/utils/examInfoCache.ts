@@ -2,7 +2,16 @@ import { Area, Competencia, Habilidade } from "@/types/exam";
 
 // Versão do cache - altere para invalidar todos os caches existentes
 const CACHE_VERSION = "v1";
-const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 dias em milliseconds
+
+// Duração do cache baseada no modo de desenvolvimento
+const getCacheDuration = (): number => {
+  if (process.env.NEXT_PUBLIC_MODE === 'development') {
+    return 24 * 60 * 60 * 1000; // 24 horas em desenvolvimento
+  }
+  return 7 * 24 * 60 * 60 * 1000; // 7 dias em produção
+};
+
+const CACHE_DURATION = getCacheDuration();
 
 // Chaves do localStorage
 const CACHE_KEYS = {
@@ -55,6 +64,12 @@ const isCacheComplete = (): boolean => {
 // Recuperar dados do cache
 export const getCachedExamInfo = (): CachedExamInfo | null => {
   if (typeof window === 'undefined') return null;
+  
+  // Se estiver em modo de desenvolvimento, desabilitar cache
+  if (process.env.NEXT_PUBLIC_MODE === 'development') {
+    console.log('Modo desenvolvimento: Cache desabilitado');
+    return null;
+  }
   
   try {
     // Verificar se cache é válido e completo

@@ -1,4 +1,4 @@
-import { List, ListStats } from "@/types/list";
+import { List, ListStats, ListQuestao } from "@/types/list";
 import { api } from "./api";
 
 // Interfaces para tipos de dados
@@ -102,6 +102,16 @@ export const getListById = async (id: string): Promise<ApiResponse<List>> => {
   } catch (error: any) {
     console.error("Error fetching list by ID:", error);
     throw error.response?.data || { message: "Erro ao buscar lista" };
+  }
+};
+
+export const getListQuestions = async (id: string): Promise<ApiResponse<ListQuestao[]>> => {
+  try {
+    const response = await api.get(`/lists/${id}/questions`);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching list questions:", error);
+    throw error.response?.data || { message: "Erro ao buscar questões da lista" };
   }
 };
 

@@ -13,18 +13,12 @@ import React, {
 } from "react";
 import { useAuth } from "./useAuth";
 import { Area, Competencia, Habilidade } from "@/types/exam";
-import { 
-  getCachedExamInfo, 
-  setCachedExamInfo,
-  CachedExamInfo 
-} from "@/utils/examInfoCache";
 
 interface GeneralExamInfoContextType {
   areas: Area[];
   competencias: Competencia[];
   habilidades: Habilidade[];
   isLoading: boolean;
-  clearCache: () => void;
 }
 
 const GeneralExamInfoContext = createContext<
@@ -48,35 +42,13 @@ export const GeneralExamInfoProvider: React.FC<
     try {
       setIsLoading(true);
       
-      // Primeiro, tentar carregar do cache
-      const cachedData = getCachedExamInfo();
-      if (cachedData) {
-        setAreas(cachedData.areas);
-        setCompetencias(cachedData.competencias);
-        setHabilidades(cachedData.habilidades);
-        setIsLoading(false);
-        return;
-      }
-
-      // Cache miss - buscar do servidor
-      console.log('Cache miss: Buscando dados do servidor...');
       const responseAreas = await getAllAreas();
       const responseCompetencias = await getAllCompetencias();
       const responseHabilidades = await getAllHabilidades();
 
-      const examData: CachedExamInfo = {
-        areas: responseAreas.data,
-        competencias: responseCompetencias.data,
-        habilidades: responseHabilidades.data
-      };
-
-      // Salvar no estado
-      setAreas(examData.areas);
-      setCompetencias(examData.competencias);
-      setHabilidades(examData.habilidades);
-
-      // Salvar no cache para próxima vez
-      setCachedExamInfo(examData);
+      setAreas(responseAreas.data);
+      setCompetencias(responseCompetencias.data);
+      setHabilidades(responseHabilidades.data);
       
     } catch (error) {
       console.error("Erro ao buscar informações do exame:", error);
@@ -85,15 +57,6 @@ export const GeneralExamInfoProvider: React.FC<
     }
   };
 
-  const clearCache = () => {
-    import("@/utils/examInfoCache").then(({ clearExamInfoCache }) => {
-      clearExamInfoCache();
-      // Recarregar dados após limpar cache
-      if (isAuthenticated) {
-        handleGetAllExamInfo();
-      }
-    });
-  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -110,7 +73,7 @@ export const GeneralExamInfoProvider: React.FC<
 
   return (
     <GeneralExamInfoContext.Provider
-      value={{ areas, competencias, habilidades, isLoading, clearCache }}
+      value={{ areas, competencias, habilidades, isLoading }}
     >
       {children}
     </GeneralExamInfoContext.Provider>
