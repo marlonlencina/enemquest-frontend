@@ -11,6 +11,7 @@ export const QuestionOptions = ({ selectedOption, onOptionSelect }: QuestionOpti
       <h4 className="font-head text-body18 font-semibold text-black-custom">
         Selecione a resposta
       </h4>
+      <p className="font-body text-body14 text-gray-500-custom mt-2 font-normal">Bastar clicar aqui em baixo na alternativa desejada</p>
       <div className="flex items-center justify-around mt-6">
         {options.map((option) => (
           <div

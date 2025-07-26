@@ -162,11 +162,6 @@ export default function ListQuestions({ params }: PageProps) {
         <div className="w-full py-12 flex-1 bg-gray-100-custom px-6">
           <div className="flex gap-6">
             <div className="flex flex-col gap-6 max-w-[384px] w-full">
-              <div>
-                <p>
-                  {currentQuestionIndex + 1} de {questions.length}
-                </p>
-              </div>
               <QuestionDetails
                 title={`${questions[currentQuestionIndex]?.id}`}
                 questionNumber={`Questão ${questions[currentQuestionIndex]?.questao.ano} - Amarela`}
