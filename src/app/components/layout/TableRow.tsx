@@ -7,7 +7,7 @@ export interface TableRowProps {
 
 export const TableRow = ({ children, className = "" }: TableRowProps) => {
   return (
-    <tr className={`h-[64px] ${className}`}>
+    <tr className={`h-[64px] ${className} `}>
       {children}
     </tr>
   );

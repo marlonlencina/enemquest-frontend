@@ -21,7 +21,9 @@ import { DataTable } from "../../components/layout/DataTable";
 import ListActions from "../../components/layout/ListActions";
 import { PageTitle } from "../../components/layout/PageTitle";
 import StatCard from "../../components/layout/StatCard";
-import SubjectBadge from "../../components/layout/SubjectBadge";
+import SubjectBadge, {
+  SubjectCode,
+} from "../../components/layout/SubjectBadge";
 import { TableBody } from "../../components/layout/TableBody";
 import { TableCell } from "../../components/layout/TableCell";
 import { TableHeader } from "../../components/layout/TableHeader";
@@ -202,8 +204,15 @@ export default function Dashboard() {
                   <TableRow key={list.id}>
                     <TableCell variant="primary">{list.nome}</TableCell>
                     <TableCell>{list.numeroQuestoes}</TableCell>
-                    <TableCell className="px-6">
-                      <SubjectBadge codigo="MT" />
+                    <TableCell className="h-[64px] px-6 flex items-center gap-1">
+                      {list.areas.map((area) => {
+                        return (
+                          <SubjectBadge
+                            key={area}
+                            codigo={area as SubjectCode}
+                          />
+                        );
+                      })}
                     </TableCell>
                     <TableCell>{getListStatus(list.status)}</TableCell>
                     <TableCell className="px-6 w-auto">

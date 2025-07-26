@@ -6,17 +6,15 @@ import {
   DialogButtonsWrapper,
   DialogTitle,
 } from "@/app/components/layout/dialog";
-import StatCard from "@/app/components/layout/StatCard";
+import { NavigationButton } from "@/app/components/layout/NavigationButton";
 import { SubjectCode } from "@/app/components/layout/SubjectBadge";
 import { QuestionAnswersList } from "@/app/components/question/QuestionAnswerList";
-import { QuestionAnswersListReview } from "@/app/components/question/QuestionAnswerListReview";
 import { QuestionDetails } from "@/app/components/question/QuestionDetails";
 import { QuestionFamily } from "@/app/components/question/QuestionFamily";
 import { QuestionImage } from "@/app/components/question/QuestionImage";
 import { QuestionOptions } from "@/app/components/question/QuestionOptions";
-import { getListQuestions } from "@/server/listRequests";
+import { getListQuestions, submitQuizResults } from "@/server/listRequests";
 import { ListQuestao } from "@/types/list";
-import { NavigationButton } from "@/app/components/layout/NavigationButton";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
@@ -28,44 +26,13 @@ interface PageProps {
   }>;
 }
 
-const answers = [
-  {
-    id: "1",
-    title: "Questão #1 - ENEM 2024 (Físico)",
-    selectedAlternative: "A",
-  },
-  {
-    id: "2",
-    title: "Questão #2 - ENEM 2024 (Físico)",
-    selectedAlternative: "B",
-  },
-  {
-    id: "3",
-    title: "Questão #3 - ENEM 2024 (Físico)",
-    selectedAlternative: "D",
-  },
-];
-
-const answersReview = [
-  {
-    id: "1",
-    title: "Questão #1 - ENEM 2024 (Físico)",
-    selectedAlternative: "A",
-    correctAlternative: "A",
-  },
-  {
-    id: "2",
-    title: "Questão #2 - ENEM 2024 (Físico)",
-    selectedAlternative: "B",
-    correctAlternative: "B",
-  },
-  {
-    id: "3",
-    title: "Questão #3 - ENEM 2024 (Físico)",
-    selectedAlternative: "D",
-    correctAlternative: "C",
-  },
-];
+interface Answer {
+  id: string;
+  title: string;
+  selectedAlternative: string;
+  correctAlternative: string;
+  isCorrect: boolean;
+}
 
 interface QuestionAnswer {
   questionId: string;
@@ -87,29 +54,39 @@ export default function ListQuestions({ params }: PageProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState<ListQuestao[]>([]);
   const [questionAnswers, setQuestionAnswers] = useState<QuestionAnswer[]>([]);
-  
+  const [answersList, setAnswersList] = useState<Answer[]>([]);
+
   const handleOptionSelect = (option: string) => {
     const currentQuestion = questions[currentQuestionIndex];
     if (!currentQuestion) return;
 
-    setQuestionAnswers(prev => {
-      const existingIndex = prev.findIndex(answer => answer.questionId === currentQuestion.id.toString());
-      
+    setQuestionAnswers((prev) => {
+      const existingIndex = prev.findIndex(
+        (answer) => answer.questionId === currentQuestion.id.toString()
+      );
+
       if (existingIndex >= 0) {
         const updated = [...prev];
-        updated[existingIndex] = { questionId: currentQuestion.id.toString(), selectedOption: option };
+        updated[existingIndex] = {
+          questionId: currentQuestion.id.toString(),
+          selectedOption: option,
+        };
         return updated;
       } else {
-        return [...prev, { questionId: currentQuestion.id.toString(), selectedOption: option }];
+        return [
+          ...prev,
+          { questionId: currentQuestion.id.toString(), selectedOption: option },
+        ];
       }
     });
   };
-
   const getCurrentQuestionAnswer = () => {
     const currentQuestion = questions[currentQuestionIndex];
     if (!currentQuestion) return undefined;
-    
-    return questionAnswers.find(answer => answer.questionId === currentQuestion.id.toString())?.selectedOption;
+
+    return questionAnswers.find(
+      (answer) => answer.questionId === currentQuestion.id.toString()
+    )?.selectedOption;
   };
   const handleGetQuestions = async (listId: string) => {
     try {
@@ -132,17 +109,47 @@ export default function ListQuestions({ params }: PageProps) {
       const nextIndex = prevIndex - 1;
       return nextIndex >= 0 ? nextIndex : 0;
     });
-  }
-
+  };
   const handleNextQuestion = () => {
     setCurrentQuestionIndex((prevIndex) => {
       const nextIndex = prevIndex + 1;
       return nextIndex;
     });
   };
-
   const handleReviewAnswers = () => {
+    console.log("Revisar respostas", questionAnswers);
+    const answers = questionAnswers.map((answer) => {
+      const question = questions.find(
+        (q) => q.id.toString() === answer.questionId
+      );
+      return {
+        id: question?.questao.id|| "",
+        title: `Questão #${question?.questao.ano} - ${question?.questao.prova}`,
+        selectedAlternative: answer.selectedOption,
+        correctAlternative: question?.questao.gabarito
+          ? question?.questao.gabarito
+          : "",
+        isCorrect:
+          answer.selectedOption === question?.questao.gabarito ? true : false,
+      };
+    });
+    setAnswersList(answers);
     setIsDialogOpen(true);
+  };
+
+  const handleSubmitResults = async () => {
+    try {
+      const mappedAnswers = answersList.map((answer) => {
+        return {
+          questaoId: answer.id,
+          alternativaSelecionada: answer.selectedAlternative,
+        };
+      });
+      await submitQuizResults(id, mappedAnswers);
+      handleDialogStepChange("review");
+    } catch (error) {
+      console.error("Erro ao enviar resultados:", error);
+    }
   };
 
   useEffect(() => {
@@ -156,7 +163,9 @@ export default function ListQuestions({ params }: PageProps) {
           <div className="flex items-start gap-6">
             <div className="flex flex-col gap-6 max-w-[384px] w-full">
               <div>
-                <p>{currentQuestionIndex + 1} de {questions.length}</p>
+                <p>
+                  {currentQuestionIndex + 1} de {questions.length}
+                </p>
               </div>
               <QuestionDetails
                 title={`${questions[currentQuestionIndex]?.id}`}
@@ -168,7 +177,7 @@ export default function ListQuestions({ params }: PageProps) {
                 actionsDisabled
               />
               <QuestionFamily />
-              <QuestionOptions 
+              <QuestionOptions
                 selectedOption={getCurrentQuestionAnswer()}
                 onOptionSelect={handleOptionSelect}
               />
@@ -186,24 +195,28 @@ export default function ListQuestions({ params }: PageProps) {
         </div>
       )}
       <div className="flex items-center">
-        <NavigationButton 
+        <NavigationButton
           direction="prev"
           label="Anterior"
           onClick={handlePrevQuestion}
           disabled={currentQuestionIndex === 0}
         />
-        {currentQuestionIndex === questions.length - 1 && getCurrentQuestionAnswer() ? (
-          <NavigationButton 
+        {currentQuestionIndex === questions.length - 1 &&
+        getCurrentQuestionAnswer() ? (
+          <NavigationButton
             direction="next"
             label="Revisar respostas"
             onClick={handleReviewAnswers}
           />
         ) : (
-          <NavigationButton 
+          <NavigationButton
             direction="next"
             label="Próxima"
             onClick={handleNextQuestion}
-            disabled={currentQuestionIndex >= questions.length - 1 || !getCurrentQuestionAnswer()}
+            disabled={
+              currentQuestionIndex >= questions.length - 1 ||
+              !getCurrentQuestionAnswer()
+            }
           />
         )}
       </div>
@@ -222,7 +235,7 @@ export default function ListQuestions({ params }: PageProps) {
               </DialogDescription>
             </div>
             <div className="mt-6">
-              <QuestionAnswersList answers={answers} />
+              <QuestionAnswersList answers={answersList} />
             </div>
             <div className="mt-6">
               <DialogButtonsWrapper>
@@ -235,7 +248,7 @@ export default function ListQuestions({ params }: PageProps) {
                 <Button
                   variant="primary"
                   className="w-full"
-                  onClick={() => handleDialogStepChange("review")}
+                  onClick={() => handleSubmitResults()}
                   text="Confirmar"
                 />
               </DialogButtonsWrapper>
@@ -247,47 +260,16 @@ export default function ListQuestions({ params }: PageProps) {
               <DialogTitle>Aqui está seu desempenho</DialogTitle>
             </div>
             <div className="mt-6">
-              <QuestionAnswersListReview answers={answersReview} />
+              <QuestionAnswersList answers={answersList} mode="review" />
             </div>
-            <div className="mt-6 ">
-              <div className="w-full grid grid-cols-2 gap-[2px] bg-gray-100-custom p-[2px] overflow-hidden">
-                <StatCard
-                  height="124px"
-                  rounded={false}
-                  text="Questões"
-                  number="5"
-                />
-                <StatCard
-                  height="124px"
-                  text="Acertos"
-                  rounded={false}
-                  number="3"
-                  icon="mdi:check-circle"
-                  iconColor="text-success"
-                />
-                <StatCard
-                  height="124px"
-                  rounded={false}
-                  text="Erros"
-                  number="2"
-                  icon="mdi:close-circle"
-                  iconColor="text-failed"
-                />
-                <StatCard
-                  height="124px"
-                  rounded={false}
-                  text="Aproveitamento"
-                  number="60%"
-                />
-              </div>
-            </div>
+
             <div className="mt-6">
               <DialogButtonsWrapper>
                 <Button
                   variant="secondary"
                   className="w-full"
                   onClick={() => {
-                    router.push("/dashboard/listas/123");
+                    router.push(`/dashboard/listas/${id}`);
                   }}
                   text="Ir para o início"
                 />

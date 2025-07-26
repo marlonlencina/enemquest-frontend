@@ -1,4 +1,4 @@
-import { Questao } from "../app/types/question";
+import { Questao } from "@/types/question";
 import { api } from "./api";
 
 interface PaginatedResponse<T> {
@@ -127,3 +127,4 @@ export const getAvailableAplicacoes = async () => {
     throw error;
   }
 };
+

@@ -1,15 +1,15 @@
 "use client";
 
+import { DialogBody, DialogTitle } from "@/app/components/layout/dialog";
 import { ConfirmationActionDialog } from "@/app/components/layout/dialog/confirmationActionDialog";
 import SectionDescription from "@/app/components/layout/SectionDescription";
 import SectionTitle from "@/app/components/layout/SectionTitle";
 import { useConfirmation } from "@/context/useConfirmationDialog";
-import {
-  getListById,
-  removeQuestionFromList,
-} from "@/server/listRequests";
+import { getListById, removeQuestionFromList } from "@/server/listRequests";
+import { List } from "@/types/list";
 import { getCompetenciaCode, getHabilidadeCode } from "@/utils/getCode";
 import { getListStatus } from "@/utils/getListStatus";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
 import { ButtonStatCard } from "../../../components/layout/ButtonStatCard";
@@ -25,7 +25,6 @@ import { TableCell } from "../../../components/layout/TableCell";
 import { TableHeader } from "../../../components/layout/TableHeader";
 import { TableHeaderCell } from "../../../components/layout/TableHeaderCell";
 import { TableRow } from "../../../components/layout/TableRow";
-import { List } from "@/types/list";
 
 interface PageProps {
   params: Promise<{
@@ -41,8 +40,24 @@ export default function ListDetails({ params }: PageProps) {
     setIsDialogConfirmOpen((state) => !state);
   };
 
+  const [isDialogImgOpen, setIsDialogImgOpen] = useState(false);
+  const handleToggleDialogImg = () => {
+    setIsDialogImgOpen((state) => !state);
+  };
+
   const [list, setList] = useState<List | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
+    null
+  );
+  const selectedQuestion = list?.questoes?.find(
+    (item) => item.questao.id === selectedQuestionId
+  )?.questao;
+  const handleSelectQuestion = (questionId: string) => {
+    setSelectedQuestionId(questionId);
+    handleToggleDialogImg();
+  };
 
   const handleGetListDetails = useCallback(
     async (listId: string) => {
@@ -184,7 +199,13 @@ export default function ListDetails({ params }: PageProps) {
                             {
                               type: "icon",
                               iconName: "lucide:eye",
-                              onClick: () => console.log("view"),
+                              onClick: () => {
+                                if (item.questao.imagemUrl) {
+                                  handleSelectQuestion(item.questao.id);
+                                } else {
+                                  alert("Esta questão não possui imagem.");
+                                }
+                              },
                             },
                           ]}
                         />
@@ -206,6 +227,25 @@ export default function ListDetails({ params }: PageProps) {
         onCancel={handleToggleDialogConfirmation}
         onConfirm={() => router.push(`/dashboard/listas/${id}/start`)}
       />
+      <DialogBody open={isDialogImgOpen} onOpenChange={handleToggleDialogImg}>
+        <div className="p-6">
+          <div>
+            <DialogTitle>Imagem da questão</DialogTitle>
+          </div>
+          {selectedQuestion && selectedQuestion.imagemUrl && (
+            <div className="mt-6 w-full max-h-[80vh] overflow-y-auto">
+              <Image
+                width={0}
+                height={0}
+                sizes="100vw"
+                className="w-full h-auto"
+                src={selectedQuestion.imagemUrl}
+                alt={`Imagem da questão ${selectedQuestion.id}`}
+              />
+            </div>
+          )}
+        </div>
+      </DialogBody>
     </>
   );
 }

@@ -26,15 +26,13 @@ export interface AddQuestionToListData {
 }
 
 export interface UpdateQuestionProgressData {
-  acertou?: boolean | null; // Permitir null aqui
-  alternativaSelecionada?: string | null; // Permitir null aqui também
+  alternativaSelecionada: string;
 }
 
 export interface UpdateMultipleQuestionProgressData {
   questoes: {
     questaoId: string;
-    acertou?: boolean | null; // Permitir null aqui
-    alternativaSelecionada?: string | null; // Permitir null aqui também
+    alternativaSelecionada: string;
   }[];
 }
 
@@ -271,35 +269,13 @@ export const getUserStats = async (): Promise<ApiResponse<UserStats>> => {
 };
 
 // Funções auxiliares
-export const markQuestionAsCorrect = async (
+export const markQuestionAnswer = async (
   listId: string,
   questaoId: string,
   alternativaSelecionada: string
 ): Promise<ApiResponse<void>> => {
   return updateQuestionProgress(listId, questaoId, {
-    acertou: true,
     alternativaSelecionada,
-  });
-};
-
-export const markQuestionAsIncorrect = async (
-  listId: string,
-  questaoId: string,
-  alternativaSelecionada: string
-): Promise<ApiResponse<void>> => {
-  return updateQuestionProgress(listId, questaoId, {
-    acertou: false,
-    alternativaSelecionada,
-  });
-};
-
-export const markQuestionAsUnanswered = async (
-  listId: string,
-  questaoId: string
-): Promise<ApiResponse<void>> => {
-  return updateQuestionProgress(listId, questaoId, {
-    acertou: null, // Agora funciona
-    alternativaSelecionada: null, // Agora funciona
   });
 };
 
@@ -308,14 +284,15 @@ export const submitQuizResults = async (
   results: {
     questaoId: string;
     alternativaSelecionada: string;
-    gabarito: string;
   }[]
 ): Promise<ApiResponse<void>> => {
-  const questoes = results.map((result) => ({
-    questaoId: result.questaoId,
-    acertou: result.alternativaSelecionada === result.gabarito,
-    alternativaSelecionada: result.alternativaSelecionada,
-  }));
-
-  return updateMultipleQuestionProgress(listId, { questoes });
+  try {
+    const response = await api.patch(`/lists/${listId}/progress`, {
+      questoes: results
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error("Error submitting quiz results:", error);
+    throw error.response?.data || { message: "Erro ao enviar resultados do quiz" };
+  }
 };
