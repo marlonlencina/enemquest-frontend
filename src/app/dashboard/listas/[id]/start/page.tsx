@@ -11,7 +11,7 @@ import { SubjectCode } from "@/app/components/layout/SubjectBadge";
 import { QuestionAnswersList } from "@/app/components/question/QuestionAnswerList";
 import { QuestionDetails } from "@/app/components/question/QuestionDetails";
 import { QuestionFamily } from "@/app/components/question/QuestionFamily";
-import { QuestionImage } from "@/app/components/question/QuestionImage";
+import { QuestionImageWithHighlight } from "@/app/components/question/QuestionImageWithHighlight";
 import { QuestionOptions } from "@/app/components/question/QuestionOptions";
 import { getListQuestions, submitQuizResults } from "@/server/listRequests";
 import { ListQuestao } from "@/types/list";
@@ -123,7 +123,7 @@ export default function ListQuestions({ params }: PageProps) {
         (q) => q.id.toString() === answer.questionId
       );
       return {
-        id: question?.questao.id|| "",
+        id: question?.questao.id || "",
         title: `Questão #${question?.questao.ano} - ${question?.questao.prova}`,
         selectedAlternative: answer.selectedOption,
         correctAlternative: question?.questao.gabarito
@@ -160,7 +160,7 @@ export default function ListQuestions({ params }: PageProps) {
     <>
       {questions[currentQuestionIndex] && (
         <div className="w-full py-12 flex-1 bg-gray-100-custom px-6">
-          <div className="flex items-start gap-6">
+          <div className="flex gap-6">
             <div className="flex flex-col gap-6 max-w-[384px] w-full">
               <div>
                 <p>
@@ -182,15 +182,17 @@ export default function ListQuestions({ params }: PageProps) {
                 onOptionSelect={handleOptionSelect}
               />
             </div>
-            <QuestionImage
-              src={
-                questions[currentQuestionIndex]?.questao.imagemUrl
-                  ? questions[currentQuestionIndex]?.questao.imagemUrl
-                  : placeholder.src
-              }
-              alt={`Questão ${questions[currentQuestionIndex]?.questao.codigoINEP}`}
-              questionId={`${questions[currentQuestionIndex]?.questao.codigoINEP}`}
-            />
+            <div className="w-full">
+              <QuestionImageWithHighlight
+                src={
+                  questions[currentQuestionIndex]?.questao.imagemUrl
+                    ? questions[currentQuestionIndex]?.questao.imagemUrl
+                    : placeholder.src
+                }
+                alt={`Questão ${questions[currentQuestionIndex]?.questao.codigoINEP}`}
+                questionId={`${questions[currentQuestionIndex]?.questao.codigoINEP}`}
+              />
+            </div>
           </div>
         </div>
       )}
