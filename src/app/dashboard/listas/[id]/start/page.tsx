@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/app/components/form/Button";
+import { Accordion } from "@/app/components/layout/Accordion";
 import {
   DialogBody,
   DialogButtonsWrapper,
@@ -8,13 +9,14 @@ import {
 } from "@/app/components/layout/dialog";
 import { NavigationButton } from "@/app/components/layout/NavigationButton";
 import { SubjectCode } from "@/app/components/layout/SubjectBadge";
+import TextButton from "@/app/components/layout/TextButton";
 import { QuestionAnswersList } from "@/app/components/question/QuestionAnswerList";
 import { QuestionDetails } from "@/app/components/question/QuestionDetails";
-import { QuestionFamily } from "@/app/components/question/QuestionFamily";
 import { QuestionImageWithHighlight } from "@/app/components/question/QuestionImageWithHighlight";
 import { QuestionOptions } from "@/app/components/question/QuestionOptions";
 import { getListQuestions, submitQuizResults } from "@/server/listRequests";
 import { ListQuestao } from "@/types/list";
+import { getCompetenciaCode, getHabilidadeCode } from "@/utils/getCode";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useRouter } from "next/navigation";
 import { use, useEffect, useState } from "react";
@@ -159,64 +161,107 @@ export default function ListQuestions({ params }: PageProps) {
   return (
     <>
       {questions[currentQuestionIndex] && (
-        <div className="w-full py-12 flex-1 bg-gray-100-custom px-6">
-          <div className="flex gap-6">
-            <div className="flex flex-col gap-6 max-w-[384px] w-full">
-              <QuestionDetails
-                title={`${questions[currentQuestionIndex]?.id}`}
-                questionNumber={`Questão ${questions[currentQuestionIndex]?.questao.ano} - Amarela`}
-                questionId={`${questions[currentQuestionIndex]?.questao.codigoINEP}`}
-                subjectCode={
-                  questions[currentQuestionIndex]?.questao.prova as SubjectCode
-                }
-                actionsDisabled
-              />
-              <QuestionFamily />
-              <QuestionOptions
-                selectedOption={getCurrentQuestionAnswer()}
-                onOptionSelect={handleOptionSelect}
-              />
-            </div>
-            <div className="w-full">
-              <QuestionImageWithHighlight
-                src={
-                  questions[currentQuestionIndex]?.questao.imagemUrl
-                    ? questions[currentQuestionIndex]?.questao.imagemUrl
-                    : placeholder.src
-                }
-                alt={`Questão ${questions[currentQuestionIndex]?.questao.codigoINEP}`}
-                questionId={`${questions[currentQuestionIndex]?.questao.codigoINEP}`}
-              />
+        <>
+          <div className="w-full flex-1 bg-gray-100-custom">
+            <div className="flex gap-6">
+              <div className="flex flex-col gap-6 max-w-[384px] w-full">
+                <QuestionDetails
+                  title={`Questão #${questions[currentQuestionIndex]?.ordem} de ${questions.length}`}
+                  questionNumber={`Questão ${questions[currentQuestionIndex]?.questao.ano} - Prova Amarela`}
+                  questionId={`Código identificador #${questions[currentQuestionIndex]?.questao.codigoINEP}`}
+                  subjectCode={
+                    questions[currentQuestionIndex]?.questao
+                      .prova as SubjectCode
+                  }
+                  actionsDisabled
+                />
+                <Accordion
+                  title="Habilidade e competência"
+                  description="Clique para exibir"
+                >
+                  <div className="flex flex-col gap-6">
+                    <div>
+                      <h5 className="font-head font-medium text-body16 text-black-custom mt-2">
+                        Habilidade{" "}
+                        {getHabilidadeCode(
+                          questions[currentQuestionIndex]?.questao.habilidade
+                            .codigo
+                        )}
+                      </h5>
+                      <p className="font-body text-body16 text-gray-500-custom mt-2 font-normal">
+                        {
+                          questions[currentQuestionIndex]?.questao.habilidade
+                            .descricao
+                        }
+                      </p>
+                    </div>
+                    <div>
+                      <h5 className="font-head font-medium text-body16 text-black-custom mt-2">
+                        Competência{" "}
+                        {getCompetenciaCode(
+                          questions[currentQuestionIndex]?.questao.habilidade
+                            .competencia.codigo
+                        )}
+                      </h5>
+                      <p className="font-body text-body16 text-gray-500-custom mt-2 font-normal">
+                        {
+                          questions[currentQuestionIndex]?.questao.habilidade
+                            .competencia.descricao
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </Accordion>
+                <QuestionOptions
+                  selectedOption={getCurrentQuestionAnswer()}
+                  onOptionSelect={handleOptionSelect}
+                />
+              </div>
+              <div className="w-full">
+                <QuestionImageWithHighlight
+                  src={
+                    questions[currentQuestionIndex]?.questao.imagemUrl
+                      ? questions[currentQuestionIndex]?.questao.imagemUrl
+                      : placeholder.src
+                  }
+                  alt={`Questão ${questions[currentQuestionIndex]?.questao.codigoINEP}`}
+                  questionId={`${questions[currentQuestionIndex]?.questao.codigoINEP}`}
+                />
+              </div>
             </div>
           </div>
-        </div>
+          <div className="mt-6 flex items-center">
+            <NavigationButton
+              direction="prev"
+              label="Anterior"
+              onClick={handlePrevQuestion}
+              disabled={currentQuestionIndex === 0}
+            />
+            {currentQuestionIndex === questions.length - 1 &&
+            getCurrentQuestionAnswer() ? (
+              <NavigationButton
+                direction="next"
+                label="Revisar respostas"
+                onClick={handleReviewAnswers}
+              />
+            ) : (
+              <NavigationButton
+                direction="next"
+                label="Próxima Questão"
+                onClick={handleNextQuestion}
+                disabled={
+                  currentQuestionIndex >= questions.length - 1 ||
+                  !getCurrentQuestionAnswer()
+                }
+              />
+            )}
+          </div>
+          <div className="mt-6 w-full grid place-content-center">
+            <TextButton text="Sair da lista" onClick={() => {router.push(`/dashboard/listas/${id}`)}}></TextButton>
+          </div>
+        </>
       )}
-      <div className="flex items-center">
-        <NavigationButton
-          direction="prev"
-          label="Anterior"
-          onClick={handlePrevQuestion}
-          disabled={currentQuestionIndex === 0}
-        />
-        {currentQuestionIndex === questions.length - 1 &&
-        getCurrentQuestionAnswer() ? (
-          <NavigationButton
-            direction="next"
-            label="Revisar respostas"
-            onClick={handleReviewAnswers}
-          />
-        ) : (
-          <NavigationButton
-            direction="next"
-            label="Próxima"
-            onClick={handleNextQuestion}
-            disabled={
-              currentQuestionIndex >= questions.length - 1 ||
-              !getCurrentQuestionAnswer()
-            }
-          />
-        )}
-      </div>
+
       <DialogBody
         showCloseButton={false}
         maxWidth="max-w-[696px]"
@@ -239,7 +284,7 @@ export default function ListQuestions({ params }: PageProps) {
                 <Button
                   variant="secondary"
                   className="w-full"
-                  onClick={() => {}}
+                  onClick={() => handleDialogOpenToggle()}
                   text="Cancelar"
                 />
                 <Button

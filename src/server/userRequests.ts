@@ -21,6 +21,18 @@ export interface GoogleAuthData {
   token: string;
 }
 
+export interface UpdateUserData {
+  nome: string;
+  sobrenome: string;
+  email: string;
+  usuario: string;
+}
+
+export interface ChangePasswordData {
+  senhaAtual: string;
+  novaSenha: string;
+}
+
 // Interfaces para as respostas
 export interface AuthResponse {
   success: boolean;
@@ -123,6 +135,32 @@ export const validateToken = async (): Promise<{
     return response.data;
   } catch (error: any) {
     console.error("Error validating token:", error);
+    throw ErrorHandler.fromApiResponse(error);
+  }
+};
+
+export const updateUser = async (
+  userId: string,
+  data: UpdateUserData
+): Promise<{ success: boolean; message: string; data: any }> => {
+  try {
+    const response = await api.put(`/users/${userId}`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error updating user:", error);
+    throw ErrorHandler.fromApiResponse(error);
+  }
+};
+
+export const changePassword = async (
+  userId: string,
+  data: ChangePasswordData
+): Promise<{ success: boolean; message: string }> => {
+  try {
+    const response = await api.patch(`/users/${userId}/password`, data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error changing password:", error);
     throw ErrorHandler.fromApiResponse(error);
   }
 };

@@ -14,17 +14,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <Container className="flex-1 h-full w-full bg-gray-100-custom ">
         <div className="w-full h-full py-12 px-6 flex-1">{children}</div>
       </Container>
-      <footer className="">
+      <footer className="w-full">
         <Container>
           <div className="w-full bg-gray-300-custom h-[64px] flex items-center px-6">
-            <div className="flex items-center gap-4 justify-between">
-              <p className="font-body font-normal text-body14 text-black-custom">
-                © 2025 ENEMQuest. Versão 1.0.0.
-              </p>
+            <div className="w-full flex items-center gap-4 justify-between">
+              <div>
+                <p className="font-body font-normal text-body14 text-black-custom">
+                    🧠 ENEM Quest© Versão 1.0.0.
+                </p>
+              </div>
               <div className="flex items-center gap-2">
-                <div className="w-[6px] h-[6px] bg-success rounded-full"></div>
                 <span className="font-head font-normal text-body14 text-black-custom">
-                  Todos sistemas operando.
+                  De estudante para estudante. 💙
                 </span>
               </div>
             </div>

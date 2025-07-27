@@ -27,7 +27,7 @@ export const QuestionDetails = ({
           {questionNumber}
         </h5>
         <span className="font-body text-sm12 text-gray-500-custom">
-          #{questionId}
+          {questionId}
         </span>
         <div className="flex items-center gap-2 mt-4">
           <div className="flex items-center gap-2 ">

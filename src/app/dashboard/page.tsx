@@ -19,7 +19,17 @@ export default function Dashboard() {
           </PageTitle>
         )}
         <div className="grid grid-cols-4 mt-6 gap-6">
-          <div className="col-span-2 w-full h-[164px] rounded-lg bg-blue-primary "></div>
+          <div className="col-span-2 w-full h-[164px] rounded-lg bg-blue-primary p-6 flex items-center">
+            <div>
+              <h4 className="font-head text-head24 text-white-custom font-semibold">
+                Olá, estudante!
+              </h4>
+              <p className="mt-2 font-body text-body14 text-white-custom">
+                O ENEM Quest encontra-se em desenvolvimento, conto com você para
+                nos ajudar a torná-lo uma ferramenta poderosa para seus estudos!
+              </p>
+            </div>
+          </div>
           <StatCard text="Patente" number="Iniciante" />
           <StatCard text="Ranking" number="#412" />
         </div>

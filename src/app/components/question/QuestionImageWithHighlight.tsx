@@ -288,7 +288,7 @@ export const QuestionImageWithHighlight = ({
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm12 text-gray-500-custom font-button">
-            Tamanho do Marca texto:
+            Tamanho:
           </span>
           <div className="flex items-center">
             <div

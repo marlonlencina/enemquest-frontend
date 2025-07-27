@@ -29,6 +29,8 @@ import { TableCell } from "../../components/layout/TableCell";
 import { TableHeader } from "../../components/layout/TableHeader";
 import { TableHeaderCell } from "../../components/layout/TableHeaderCell";
 import { TableRow } from "../../components/layout/TableRow";
+import { ConfirmationActionDialog } from "@/app/components/layout/dialog/confirmationActionDialog";
+import { List } from "@/types/list";
 
 const createListValidationSchema = Yup.object({
   nome: Yup.string()
@@ -71,6 +73,20 @@ export default function Dashboard() {
         id: list.id,
       });
       setIsDialogEditListOpen(true);
+    }
+  };
+
+  const [isDialogConfirmOpen, setIsDialogConfirmOpen] = useState(false);
+  const handleToggleDialogConfirmation = () => {
+    setIsDialogConfirmOpen((state) => !state);
+  };
+
+  const [selectedList, setSelectedList] = useState<List | null>(null);
+  const handleStartList = (listId: string) => {
+    const list = lists.find((list) => list.id === listId);
+    if (list) {
+      setSelectedList(list);
+      handleToggleDialogConfirmation();
     }
   };
 
@@ -239,7 +255,9 @@ export default function Dashboard() {
                           {
                             type: "text",
                             text: "Iniciar",
-                            onClick: () => {},
+                            onClick: () => {
+                              handleStartList(list.id);
+                            },
                           },
                         ]}
                       />
@@ -363,6 +381,16 @@ export default function Dashboard() {
           </form>
         </div>
       </DialogBody>
+      <ConfirmationActionDialog
+        open={isDialogConfirmOpen}
+        onOpenChange={handleToggleDialogConfirmation}
+        title="Tudo pronto?"
+        description={`Você está prestes a iniciar a lista: ${selectedList?.nome}.`}
+        cancelText="Cancelar"
+        confirmText="Iniciar lista"
+        onCancel={handleToggleDialogConfirmation}
+        onConfirm={() => router.push(`/dashboard/listas/${selectedList?.id}/start`)}
+      />
     </>
   );
 }
