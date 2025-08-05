@@ -49,13 +49,41 @@ export const getAuthTokenFromCookie = (): string | null => {
 
 export const saveAuthTokenToCookie = (token: string): void => {
   if (typeof document !== 'undefined') {
-    document.cookie = `auth-token=${token}; path=/; max-age=86400`; // 24h
+    // Configurações mais robustas para produção
+    const isProduction = window.location.protocol === 'https:';
+    const cookieOptions = [
+      `auth-token=${token}`,
+      'path=/',
+      'max-age=86400', // 24h
+      'SameSite=Lax'
+    ];
+    
+    // Adicionar Secure apenas em HTTPS
+    if (isProduction) {
+      cookieOptions.push('Secure');
+    }
+    
+    document.cookie = cookieOptions.join('; ');
+    console.log('Token salvo no cookie:', token.substring(0, 20) + '...');
   }
 };
 
 export const removeAuthToken = (): void => {
   // Remover apenas o cookie
   if (typeof document !== 'undefined') {
-    document.cookie = `auth-token=; path=/; max-age=0`;
+    const isProduction = window.location.protocol === 'https:';
+    const cookieOptions = [
+      'auth-token=',
+      'path=/',
+      'max-age=0',
+      'SameSite=Lax'
+    ];
+    
+    if (isProduction) {
+      cookieOptions.push('Secure');
+    }
+    
+    document.cookie = cookieOptions.join('; ');
+    console.log('Token removido do cookie');
   }
 };
