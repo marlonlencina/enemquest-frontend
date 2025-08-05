@@ -9,6 +9,7 @@ import { Logo } from "@/app/components/layout/Logo";
 import { useAuth } from "@/context/useAuth";
 import { useErrorHandler } from "@/utils/errorHandler";
 import { useFormik } from "formik";
+import Link from "next/link";
 import { useState } from "react";
 import * as Yup from "yup";
 
@@ -87,21 +88,31 @@ export default function Login() {
                         formik.touched.login ? formik.errors.login : undefined
                       }
                     />
-                    <Input
-                      label="Senha"
-                      type="password"
-                      id="password"
-                      placeholder="********"
-                      showPasswordToggle
-                      value={formik.values.password}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      error={
-                        formik.touched.password
-                          ? formik.errors.password
-                          : undefined
-                      }
-                    />
+                    <div>
+                      <Input
+                        label="Senha"
+                        type="password"
+                        id="password"
+                        placeholder="********"
+                        showPasswordToggle
+                        value={formik.values.password}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={
+                          formik.touched.password
+                            ? formik.errors.password
+                            : undefined
+                        }
+                      />
+                      <div className="mt-2">
+                        <Link
+                          href={"/auth/forgot-password"}
+                          className="font-button text-button16 font-semibold hover:underline text-blue-primary hover:text-blue-primary-dark transition-all"
+                        >
+                          Esqueci minha senha
+                        </Link>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex items-center gap-6">
                     <LinkButton
