@@ -1,8 +1,8 @@
 "use client";
 import {
-  getAuthTokenFromCookie,
+  getAuthTokenFromStorage,
   removeAuthToken,
-  saveAuthTokenToCookie,
+  saveAuthTokenToStorage,
 } from "@/config/localStorage";
 import { api } from "@/server/api";
 import {
@@ -70,27 +70,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(response.data.user);
         
         // Salvar token no cookie e definir header para próximas requisições
-        saveAuthTokenToCookie(response.data.token);
+        saveAuthTokenToStorage(response.data.token);
         api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
         
         console.log('Tentando redirecionar para dashboard...');
-        
-        // Tentar router.push primeiro, com fallback para window.location
-        try {
-          router.push("/dashboard");
-          console.log('Router.push executado');
-          
-          // Fallback se router.push não funcionar em 500ms
-          setTimeout(() => {
-            if (window.location.pathname !== '/dashboard') {
-              console.log('Router.push falhou, usando window.location...');
-              window.location.href = '/dashboard';
-            }
-          }, 500);
-        } catch (error) {
-          console.error('Erro no router.push, usando window.location:', error);
-          window.location.href = '/dashboard';
-        }
+        router.push("/dashboard");
+        console.log('Router.push executado');
       }
     } catch (error) {
       console.error('Erro no login:', error);
@@ -134,27 +119,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(response.data.user);
         
         // Salvar token no cookie e definir header para próximas requisições
-        saveAuthTokenToCookie(response.data.token);
+        saveAuthTokenToStorage(response.data.token);
         api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
         
         console.log('Tentando redirecionar para dashboard...');
-        
-        // Tentar router.push primeiro, com fallback para window.location
-        try {
-          router.push("/dashboard");
-          console.log('Router.push executado');
-          
-          // Fallback se router.push não funcionar em 500ms
-          setTimeout(() => {
-            if (window.location.pathname !== '/dashboard') {
-              console.log('Router.push falhou, usando window.location...');
-              window.location.href = '/dashboard';
-            }
-          }, 500);
-        } catch (error) {
-          console.error('Erro no router.push, usando window.location:', error);
-          window.location.href = '/dashboard';
-        }
+        router.push("/dashboard");
+        console.log('Router.push executado');
       }
     } catch (error) {
       console.error("Erro ao fazer login com Google:", error);
@@ -216,7 +186,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const token = getAuthTokenFromCookie();
+        const token = getAuthTokenFromStorage();
         if (token) {
           setIsLoading(true);
           await getProfile();

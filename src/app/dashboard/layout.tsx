@@ -1,5 +1,8 @@
 "use client";
 
+import { useAuth } from "@/context/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { Header } from "../components/header";
 import { Container } from "../components/layout/Container";
 
@@ -8,6 +11,32 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      console.log('Usuário não autenticado, redirecionando para login...');
+      router.push('/auth/login');
+    }
+  }, [isAuthenticated, isLoading, router]);
+
+  // Mostrar loading enquanto verifica autenticação
+  if (isLoading) {
+    return (
+      <div className="bg-gray-200-custom w-full min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-primary mx-auto"></div>
+          <p className="mt-2 text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Não renderizar nada se não estiver autenticado
+  if (!isAuthenticated) {
+    return null;
+  }
   return (
     <div className="bg-gray-200-custom w-full min-h-screen flex flex-col">
       <Header />
