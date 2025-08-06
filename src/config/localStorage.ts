@@ -33,57 +33,40 @@ export const removeFromLocalStorage = (key: string): void => {
   }
 };
 
-// Funções para gerenciar cookies de autenticação
-export const getAuthTokenFromCookie = (): string | null => {
-  if (typeof document === 'undefined') return null;
+// Funções para gerenciar autenticação via localStorage
+export const getAuthTokenFromStorage = (): string | null => {
+  if (typeof window === 'undefined') return null;
   
-  const cookies = document.cookie.split(';');
-  const authCookie = cookies.find(cookie => 
-    cookie.trim().startsWith('auth-token=')
-  );
-  
-  if (!authCookie) return null;
-  
-  return authCookie.split('=')[1] || null;
+  try {
+    return localStorage.getItem('auth-token');
+  } catch (error) {
+    console.error('Erro ao recuperar token do localStorage:', error);
+    return null;
+  }
 };
 
-export const saveAuthTokenToCookie = (token: string): void => {
-  if (typeof document !== 'undefined') {
-    // Configurações mais robustas para produção
-    const isProduction = window.location.protocol === 'https:';
-    const cookieOptions = [
-      `auth-token=${token}`,
-      'path=/',
-      'max-age=86400', // 24h
-      'SameSite=Lax'
-    ];
-    
-    // Adicionar Secure apenas em HTTPS
-    if (isProduction) {
-      cookieOptions.push('Secure');
+export const saveAuthTokenToStorage = (token: string): void => {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.setItem('auth-token', token);
+      console.log('Token salvo no localStorage:', token.substring(0, 20) + '...');
+    } catch (error) {
+      console.error('Erro ao salvar token no localStorage:', error);
     }
-    
-    document.cookie = cookieOptions.join('; ');
-    console.log('Token salvo no cookie:', token.substring(0, 20) + '...');
   }
 };
 
 export const removeAuthToken = (): void => {
-  // Remover apenas o cookie
-  if (typeof document !== 'undefined') {
-    const isProduction = window.location.protocol === 'https:';
-    const cookieOptions = [
-      'auth-token=',
-      'path=/',
-      'max-age=0',
-      'SameSite=Lax'
-    ];
-    
-    if (isProduction) {
-      cookieOptions.push('Secure');
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem('auth-token');
+      console.log('Token removido do localStorage');
+    } catch (error) {
+      console.error('Erro ao remover token do localStorage:', error);
     }
-    
-    document.cookie = cookieOptions.join('; ');
-    console.log('Token removido do cookie');
   }
 };
+
+// Manter compatibilidade temporária
+export const getAuthTokenFromCookie = getAuthTokenFromStorage;
+export const saveAuthTokenToCookie = saveAuthTokenToStorage;
