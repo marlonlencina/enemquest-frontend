@@ -61,16 +61,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (data: LoginData): Promise<void> => {
     try {
       setIsLoading(true);
+      console.log('Iniciando login...');
       const response = await loginRequest(data);
+      console.log('Resposta do login:', response);
 
       if (response.success) {
+        console.log('Login bem-sucedido, definindo usuário...');
         setUser(response.data.user);
+        
         // Salvar token no cookie e definir header para próximas requisições
         saveAuthTokenToCookie(response.data.token);
         api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+        
+        console.log('Tentando redirecionar para dashboard...');
         router.push("/dashboard");
+        console.log('Router.push executado');
       }
     } catch (error) {
+      console.error('Erro no login:', error);
       const { error: apiError, requiresLogout } = handleError(error);
 
       if (requiresLogout) {
@@ -80,6 +88,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       throw apiError;
     } finally {
       setIsLoading(false);
+      console.log('Login finalizado, isLoading:', false);
     }
   };
 
@@ -101,14 +110,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const authGoogle = async (token: string): Promise<void> => {
     try {
       setIsLoading(true);
+      console.log('Iniciando login com Google...');
       const response = await googleAuth({ token });
       console.log("Login com Google:", response);
+      
       if (response.success) {
+        console.log('Google login bem-sucedido, definindo usuário...');
         setUser(response.data.user);
+        
         // Salvar token no cookie e definir header para próximas requisições
         saveAuthTokenToCookie(response.data.token);
         api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
+        
+        console.log('Tentando redirecionar para dashboard...');
         router.push("/dashboard");
+        console.log('Router.push executado');
       }
     } catch (error) {
       console.error("Erro ao fazer login com Google:", error);
@@ -121,6 +137,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       throw apiError;
     } finally {
       setIsLoading(false);
+      console.log('Google login finalizado, isLoading:', false);
     }
   };
 
