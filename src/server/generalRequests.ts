@@ -144,7 +144,7 @@ export const getAvailableAplicacoes = async () => {
 
 export const getRanking = async (): Promise<getRankingResponse> => {
   try {
-    const response = await api.get('/ranking');
+    const response = await api.get('/users/ranking');
     return response.data;
   } catch (error) {
     console.error("Error fetching ranking:", error);
