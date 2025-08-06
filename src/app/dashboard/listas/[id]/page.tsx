@@ -9,6 +9,7 @@ import { getListById, removeQuestionFromList } from "@/server/listRequests";
 import { List } from "@/types/list";
 import { getCompetenciaCode, getHabilidadeCode } from "@/utils/getCode";
 import { getListStatus } from "@/utils/getListStatus";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use, useCallback, useEffect, useState } from "react";
@@ -47,6 +48,22 @@ export default function ListDetails({ params }: PageProps) {
 
   const [list, setList] = useState<List | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const calculatePerformance = () => {
+    if (!list?.questoes) return { correct: 0, total: 0 };
+
+    const questionsWithAnswers = list.questoes.filter(
+      (item) => item.alternativaSelecionada
+    );
+    const correctAnswers = questionsWithAnswers.filter((item) => item.acertou);
+
+    return {
+      correct: correctAnswers.length,
+      total: questionsWithAnswers.length,
+    };
+  };
+
+  const performance = calculatePerformance();
 
   const [selectedQuestionId, setSelectedQuestionId] = useState<string | null>(
     null
@@ -113,29 +130,39 @@ export default function ListDetails({ params }: PageProps) {
     <>
       <div>
         <div className="flex items-center justify-between">
-          <PageTitle>Lista de matemática #4 H19</PageTitle>
+          <PageTitle>{list?.nome}</PageTitle>
         </div>
         <div className="grid grid-cols-4 gap-6 mt-6">
           <StatCard
-            number={list?.questoes?.length ? `${list.questoes.length}` : ""}
+            number={list?.questoes?.length ? `${list.questoes.length}` : "0"}
             text="Questões na lista"
           />
           <StatCard
             number={list?.status ? getListStatus(list.status) : ""}
             text="Status da lista"
           />
+          {list?.status === "COMPLETED" && (
+            <StatCard
+              number={`${performance.correct}/${performance.total}`}
+              text="Desempenho"
+            />
+          )}
+          {list?.status === "PENDING" && (
+            <ButtonStatCard
+              text="Gerar questões"
+              icon="lucide:plus"
+              backgroundColor="bg-blue-primary"
+              iconBackgroundColor="bg-blue-primary-light"
+              hoverBackgroundColor="hover:bg-blue-primary-dark"
+              onClick={() =>
+                router.push(`/dashboard/listas/${id}/gerar-questoes`)
+              }
+            />
+          )}
           <ButtonStatCard
-            text="Gerar questões"
-            icon="lucide:plus"
-            backgroundColor="bg-blue-primary"
-            iconBackgroundColor="bg-blue-primary-light"
-            hoverBackgroundColor="hover:bg-blue-primary-dark"
-            onClick={() =>
-              router.push(`/dashboard/listas/${id}/gerar-questoes`)
+            text={
+              list?.status === "COMPLETED" ? "Refazer lista" : "Iniciar lista"
             }
-          />
-          <ButtonStatCard
-            text="Iniciar lista"
             icon="lucide:play"
             onClick={() => handleToggleDialogConfirmation()}
           />
@@ -159,6 +186,9 @@ export default function ListDetails({ params }: PageProps) {
               <TableHeaderCell>Matéria</TableHeaderCell>
               <TableHeaderCell>Competência</TableHeaderCell>
               <TableHeaderCell>Habilidade</TableHeaderCell>
+              {list?.status === "COMPLETED" && (
+                <TableHeaderCell>Resultado</TableHeaderCell>
+              )}
               <TableHeaderCell>Ações</TableHeaderCell>
             </TableHeader>
             <TableBody>
@@ -169,6 +199,7 @@ export default function ListDetails({ params }: PageProps) {
                       <TableCell variant="primary">
                         Questão #{item.ordem}
                       </TableCell>
+
                       <TableCell variant="primary">
                         {item.questao.ano}
                       </TableCell>
@@ -187,6 +218,21 @@ export default function ListDetails({ params }: PageProps) {
                       <TableCell>
                         {getHabilidadeCode(item.questao.habilidade.codigo)}
                       </TableCell>
+                      {item.alternativaSelecionada && (
+                        <TableCell variant="primary">
+                          {item.acertou ? (
+                            <Icon
+                              icon="mdi:check-circle"
+                              className="text-success text-body20"
+                            />
+                          ) : (
+                            <Icon
+                              icon="mdi:close-circle"
+                              className="text-failed text-body20"
+                            />
+                          )}
+                        </TableCell>
+                      )}
                       <TableCell className="px-6 w-auto">
                         <ListActions
                           iconButtons={[
@@ -221,7 +267,7 @@ export default function ListDetails({ params }: PageProps) {
         open={isDialogConfirmOpen}
         onOpenChange={handleToggleDialogConfirmation}
         title="Tudo pronto?"
-        description="Você está prestes a iniciar a lista de matemática #4 H19."
+        description="Você está prestes a iniciar a lista. Deseja continuar?"
         cancelText="Cancelar"
         confirmText="Iniciar lista"
         onCancel={handleToggleDialogConfirmation}

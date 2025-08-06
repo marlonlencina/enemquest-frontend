@@ -1,5 +1,6 @@
-import { useState } from "react";
 import { MultiSelect, MultiSelectOption } from "../form/MultiSelect";
+import { Competencia, Habilidade } from "@/types/exam";
+import { useEffect } from "react";
 
 export interface ButtonAreaToggleProps {
   text: string;
@@ -11,6 +12,12 @@ export interface ButtonAreaToggleProps {
   allowHability?: boolean; // Optional prop to show hability multi-select
   onQuantityChange?: (quantity: number) => void; // Callback for quantity changes
   currentQuantity?: number; // Current quantity value
+  onCompetenciasChange?: (competencias: string[]) => void; // Callback for competencias changes
+  onHabilidadesChange?: (habilidades: string[]) => void; // Callback for habilidades changes
+  currentCompetencias?: string[]; // Current competencias selected
+  currentHabilidades?: string[]; // Current habilidades selected
+  areaCompetencias?: Competencia[]; // Competencias available for this area
+  areaHabilidades?: Habilidade[]; // Habilidades available for this area
 }
 
 export const AreaSectionOptions = ({
@@ -23,27 +30,49 @@ export const AreaSectionOptions = ({
   allowHability = true,
   onQuantityChange,
   currentQuantity = 0,
+  onCompetenciasChange,
+  onHabilidadesChange,
+  currentCompetencias = [],
+  currentHabilidades = [],
+  areaCompetencias = [],
+  areaHabilidades = [],
 }: ButtonAreaToggleProps) => {
-  const [selectedCompetencias, setSelectedCompetencias] = useState<string[]>([]);
-  const [selectedHabilidades, setSelectedHabilidades] = useState<string[]>([]);
-  
-  const competenciasOptions: MultiSelectOption[] = [
-    { value: "competencia1", label: "C1" },
-    { value: "competencia2", label: "C2" },
-    { value: "competencia3", label: "C3" },
-    { value: "competencia4", label: "C4" },
-    { value: "competencia5", label: "C5" },
-    { value: "competencia6", label: "C6" },
-  ];
+  const handleCompetenciasChange = (competencias: string[]) => {
+    onCompetenciasChange?.(competencias);
+    // Clear habilidades when competencias change
+    if (currentHabilidades.length > 0) {
+      onHabilidadesChange?.([]);
+    }
+  };
 
-  const habilidadesOptions: MultiSelectOption[] = [
-    { value: "habilidade1", label: "H1" },
-    { value: "habilidade2", label: "H2" },
-    { value: "habilidade3", label: "H3" },
-    { value: "habilidade4", label: "H4" },
-    { value: "habilidade5", label: "H5" },
-    { value: "habilidade6", label: "H6" },
-  ];
+  const handleHabilidadesChange = (habilidades: string[]) => {
+    onHabilidadesChange?.(habilidades);
+  };
+  
+  const competenciasOptions: MultiSelectOption[] = areaCompetencias.map(comp => ({
+    value: comp.codigo,
+    label: comp.codigo
+  }));
+
+  // Filter habilidades based on selected competencias
+  const filteredHabilidades = areaHabilidades.filter(hab => {
+    // If no competencias selected, show none
+    if (!currentCompetencias.length) return false;
+    
+    // Find the competencia that contains this habilidade
+    return areaCompetencias.some(comp => 
+      currentCompetencias.includes(comp.codigo) && 
+      comp.habilidades?.some(h => h.codigo === hab.codigo)
+    );
+  });
+
+  const habilidadesOptions: MultiSelectOption[] = filteredHabilidades.map(hab => ({
+    value: hab.codigo,
+    label: hab.codigo
+  }));
+
+  // Check if competencias are selected to enable habilidades dropdown
+  const isHabilidadesDisabled = currentCompetencias.length === 0;
   const borderClass = isSelected
     ? "border-gray-300-custom"
     : "border-gray-100-custom hover:border-gray-200-custom";
@@ -84,8 +113,8 @@ export const AreaSectionOptions = ({
         <div className="border-t-[2px] border-gray-200-custom h-[56px] flex items-center">
           <MultiSelect 
             options={competenciasOptions}
-            optionsSelected={selectedCompetencias}
-            optionChange={setSelectedCompetencias}
+            optionsSelected={currentCompetencias}
+            optionChange={handleCompetenciasChange}
             placeholder="Selecione competências"
           />
         </div>
@@ -95,9 +124,10 @@ export const AreaSectionOptions = ({
         <div className="border-t-[2px] border-gray-200-custom h-[56px] flex items-center">
           <MultiSelect 
             options={habilidadesOptions}
-            optionsSelected={selectedHabilidades}
-            optionChange={setSelectedHabilidades}
+            optionsSelected={currentHabilidades}
+            optionChange={handleHabilidadesChange}
             placeholder="Selecione habilidades"
+            disabled={isHabilidadesDisabled}
           />
         </div>
       )}

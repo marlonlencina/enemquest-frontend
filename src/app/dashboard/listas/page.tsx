@@ -8,9 +8,11 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/app/components/layout/dialog";
+import { ConfirmationActionDialog } from "@/app/components/layout/dialog/confirmationActionDialog";
 import { ButtonOptionToggle } from "@/app/components/listas/ButtonOptionToggle";
 import { useConfirmation } from "@/context/useConfirmationDialog";
 import { useLists, useListsStats } from "@/context/useLists";
+import { List } from "@/types/list";
 import { getListStatus } from "@/utils/getListStatus";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
@@ -29,8 +31,6 @@ import { TableCell } from "../../components/layout/TableCell";
 import { TableHeader } from "../../components/layout/TableHeader";
 import { TableHeaderCell } from "../../components/layout/TableHeaderCell";
 import { TableRow } from "../../components/layout/TableRow";
-import { ConfirmationActionDialog } from "@/app/components/layout/dialog/confirmationActionDialog";
-import { List } from "@/types/list";
 
 const createListValidationSchema = Yup.object({
   nome: Yup.string()
@@ -221,14 +221,14 @@ export default function Dashboard() {
                     <TableCell variant="primary">{list.nome}</TableCell>
                     <TableCell>{list.numeroQuestoes}</TableCell>
                     <TableCell className="h-[64px] px-6 flex items-center gap-1">
-                      {list.areas.map((area) => {
+                      {list.areas?.map((area) => {
                         return (
                           <SubjectBadge
                             key={area}
                             codigo={area as SubjectCode}
                           />
                         );
-                      })}
+                      }) || <span className="text-gray-500 text-sm">Sem questões</span>}
                     </TableCell>
                     <TableCell>{getListStatus(list.status)}</TableCell>
                     <TableCell className="px-6 w-auto">
@@ -389,7 +389,9 @@ export default function Dashboard() {
         cancelText="Cancelar"
         confirmText="Iniciar lista"
         onCancel={handleToggleDialogConfirmation}
-        onConfirm={() => router.push(`/dashboard/listas/${selectedList?.id}/start`)}
+        onConfirm={() =>
+          router.push(`/dashboard/listas/${selectedList?.id}/start`)
+        }
       />
     </>
   );

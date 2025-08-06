@@ -13,9 +13,10 @@ export interface MultiSelectProps {
   optionsSelected: string[];
   optionChange: (values: string[]) => void;
   placeholder?: string;
+  disabled?: boolean;
 }
 
-export const MultiSelect = ({ options, optionsSelected, optionChange, placeholder = "Selecione" }: MultiSelectProps) => {
+export const MultiSelect = ({ options, optionsSelected, optionChange, placeholder = "Selecione", disabled = false }: MultiSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -60,16 +61,24 @@ export const MultiSelect = ({ options, optionsSelected, optionChange, placeholde
     <div className="relative w-full h-full" ref={dropdownRef}>
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between h-full w-full px-6 font-body text-body16 text-black-custom focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+        onClick={() => !disabled && setIsOpen(!isOpen)}
+        disabled={disabled}
+        className={`flex items-center justify-between h-full w-full px-6 font-body text-body16 focus:outline-none transition-all ${
+          disabled 
+            ? "text-gray-400-custom cursor-not-allowed" 
+            : "text-black-custom focus:ring-2 focus:ring-blue-500"
+        }`}
       >
-        <span className="text-black-custom font-body text-body16">
+        <span className={`font-body text-body16 ${disabled ? "text-gray-400-custom" : "text-black-custom"}`}>
           {getDisplayText()}
         </span>
-        <Icon icon="lucide:chevron-down" />
+        <Icon 
+          icon="lucide:chevron-down" 
+          className={disabled ? "text-gray-400-custom" : "text-black-custom"}
+        />
       </button>
 
-      {isOpen && (
+      {isOpen && !disabled && (
         <div className="absolute w-full top-[56px] left-0 right-0 border border-gray-300-custom border-t-0 rounded-lg z-[9999] bg-white max-h-48 overflow-y-auto">
           {options.map((option) => (
             <div
