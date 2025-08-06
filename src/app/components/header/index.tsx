@@ -52,6 +52,7 @@ export const Header = ({
             <div className="flex items-center h-full">
               <NavLink href="/dashboard">Dashboard</NavLink>
               <NavLink href="/dashboard/listas">Listas</NavLink>
+              <NavLink href="/dashboard/ranking">Ranking</NavLink>
             </div>
             <div className="flex items-center gap-6 h-full">
               {/* <IconButton

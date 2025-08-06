@@ -19,6 +19,20 @@ interface getQuestionByIdResponse<T> {
   success: boolean;
 }
 
+export interface RankingUser {
+  nome: string;
+  usuario: string;
+  avatar: string | null;
+  questoesResolvidas: number;
+  posicao: number;
+}
+
+interface getRankingResponse {
+  data: RankingUser[];
+  success: boolean;
+  message: string;
+}
+
 interface QuestionFilters {
   page?: number;
   limit?: number;
@@ -124,6 +138,16 @@ export const getAvailableAplicacoes = async () => {
     return response.data;
   } catch (error) {
     console.error("Error fetching available aplicacoes:", error);
+    throw error;
+  }
+};
+
+export const getRanking = async (): Promise<getRankingResponse> => {
+  try {
+    const response = await api.get('/ranking');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching ranking:", error);
     throw error;
   }
 };
