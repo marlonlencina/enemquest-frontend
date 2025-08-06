@@ -59,7 +59,7 @@ interface PageProps {
 }
 export default function ListGenerateQuestions({ params }: PageProps) {
   const { id } = use(params);
-  const { areas } = useGeneralExamInfo();
+  const { areas, competencias, habilidades } = useGeneralExamInfo();
   const router = useRouter();
 
   const formik = useFormik({
@@ -76,9 +76,11 @@ export default function ListGenerateQuestions({ params }: PageProps) {
       configurarHabilidades: false,
       pularQuestoesRespondidas: false,
       areas: [] as string[],
+      competenciasPorArea: {} as Record<string, string[]>,
+      habilidadesPorArea: {} as Record<string, string[]>,
     },
     validationSchema: generateQuestionsValidationSchema,
-    validateOnBlur: false,
+    validateOnBlur: true,
     validateOnChange: false,
     onSubmit: async (values) => {
       const payload = {
@@ -96,6 +98,8 @@ export default function ListGenerateQuestions({ params }: PageProps) {
             ? values.quantidadesPorArea
             : undefined,
         areas: values.areas,
+        competenciasPorArea: values.configurarCompetencias ? values.competenciasPorArea : undefined,
+        habilidadesPorArea: values.configurarHabilidades ? values.habilidadesPorArea : undefined,
         pularQuestoesResolvidas: values.pularQuestoesRespondidas,
         pularQuestoesEmOutrasListas: false,
         pularQuestoesAcertadas: false,
@@ -136,6 +140,14 @@ export default function ListGenerateQuestions({ params }: PageProps) {
     quantidade: number
   ) => {
     formik.setFieldValue(`quantidadesPorArea.${areaId}`, quantidade);
+  };
+
+  const handleCompetenciasChange = (areaId: string, competencias: string[]) => {
+    formik.setFieldValue(`competenciasPorArea.${areaId}`, competencias);
+  };
+
+  const handleHabilidadesChange = (areaId: string, habilidades: string[]) => {
+    formik.setFieldValue(`habilidadesPorArea.${areaId}`, habilidades);
   };
   // Atualiza a estratégia quando configurarPorMateria muda
   const handleConfigurarPorMateriaChange = (checked: boolean) => {
@@ -260,6 +272,23 @@ export default function ListGenerateQuestions({ params }: PageProps) {
                     currentQuantity={
                       formik.values.quantidadesPorArea[areaId] || 0
                     }
+                    onCompetenciasChange={(competencias: string[]) =>
+                      handleCompetenciasChange(areaId, competencias)
+                    }
+                    onHabilidadesChange={(habilidades: string[]) =>
+                      handleHabilidadesChange(areaId, habilidades)
+                    }
+                    currentCompetencias={
+                      formik.values.competenciasPorArea?.[areaId] || []
+                    }
+                    currentHabilidades={
+                      formik.values.habilidadesPorArea?.[areaId] || []
+                    }
+                    areaCompetencias={competencias.filter(c => c.areaId === areaId)}
+                    areaHabilidades={habilidades.filter(h => {
+                      const competencia = competencias.find(c => c.id === h.competenciaId);
+                      return competencia?.areaId === areaId;
+                    })}
                     onClick={() => console.log(`${area?.nome} configured`)}
                   />
                 );
