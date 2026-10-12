@@ -43,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head></head>
       <body
         className={`w-full h-full bg-gray-100-custom  ${manrope.className}`}
