@@ -15,6 +15,10 @@ const sections = [
     "O cadastro por e-mail solicita nome, sobrenome, e-mail, nome de usuário, telefone, data de nascimento e senha. O acesso com Google utiliza a autenticação desse serviço e informações de perfil associadas à conta. Também são utilizados os registros de listas, respostas e desempenho gerados durante o estudo.",
     "Esses dados permitem criar e administrar sua conta, autenticar o acesso, organizar suas listas e apresentar resultados e participação no ranking. Os dados necessários ao serviço são tratados para executar a relação com o usuário; obrigações legais e outras finalidades devem observar as bases legais aplicáveis. O aceite dos termos não representa consentimento genérico para qualquer uso de dados.",
   ] },
+  { id: "cookies", title: "Cookies e preferências de marketing", paragraphs: [
+    "Você pode aceitar ou recusar o uso de pixels de marketing para medir visitas e cliques nos botões de download. A recusa não impede o acesso ao site. Esses recursos dependem de autorização prévia e não devem ser ativados enquanto você não aceitar.",
+    "Sua escolha é salva no armazenamento local deste navegador. Para alterá-la, utilize o botão Preferências de cookies no rodapé. Ao limpar os dados do navegador ou acessar por outro dispositivo, poderá ser necessário escolher novamente. No momento, nenhum pixel de marketing está integrado ao site.",
+  ] },
   { id: "armazenamento", title: "Armazenamento e serviços externos", paragraphs: [
     "A plataforma utiliza armazenamento local do navegador para manter o token de autenticação. Ao sair da conta, esse token é removido. Você também pode limpar os dados do site nas configurações do navegador; isso pode encerrar seu acesso.",
     "O login com Google depende de um serviço externo, sujeito às próprias políticas de privacidade. A comunidade no WhatsApp é opcional e funciona fora do ENEM Quest. Ao entrar em um grupo, informações do seu perfil e telefone podem ficar visíveis a outros participantes conforme as configurações do WhatsApp.",

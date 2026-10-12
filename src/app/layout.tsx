@@ -1,3 +1,4 @@
+import { CookieConsent } from "./components/privacy/CookieConsent";
 import { AuthProvider } from "@/context/useAuth";
 import { ConfirmationProvider } from "@/context/useConfirmationDialog";
 import { GeneralExamInfoProvider } from "@/context/useGeneralExamInfo";
@@ -58,6 +59,7 @@ export default function RootLayout({
               </ListsProvider>
             </GoogleOAuthProvider>
           </AuthProvider>
+          <CookieConsent />
         </Theme>
       </body>
     </html>

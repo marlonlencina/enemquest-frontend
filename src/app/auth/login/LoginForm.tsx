@@ -1,4 +1,5 @@
 "use client";
+import { AuthCard } from "@/app/components/auth/AuthCard";
 import { Button } from "@/app/components/form/Button";
 import { GoogleButton } from "@/app/components/form/GoogleButton";
 import { HelperMessage } from "@/app/components/form/HelperMessage";
@@ -59,17 +60,17 @@ export default function Login() {
     },
   });
   return (
-    <div className="bg-gray-100-custom w-full">
+    <div className="auth-grid-background w-full">
       <Container>
-        <div className="flex items-center justify-center w-full py-12 flex-1 bg-gray-100-custom px-6 min-h-screen">
-          <div className="max-w-[552px] mx-auto w-full bg-white">
-            <div className="bg-blue-primary-dark p-6">
+        <div className="flex items-center justify-center w-full py-12 flex-1 px-6 min-h-screen">
+          <AuthCard>
+            <div className="auth-card-heading bg-blue-primary-dark p-6">
               <Logo height={36} />
               <h6 className="font-head text-head24 text-white-custom font-normal mt-4">
                 Bem-vindo, <b>faça seu login</b>
               </h6>
             </div>
-            <div className="w-full p-6 flex flex-col gap-6">
+            <div className="auth-card-content w-full p-6 flex flex-col gap-6">
               <HelperMessage message={serverError} showIcon variant="error" />
               <div className="">
                 <h6 className="font-head text-body16 font-semibold text-black-custom font-normal">
@@ -154,7 +155,7 @@ export default function Login() {
                 </div>
               </div>
             </div>
-          </div>
+          </AuthCard>
         </div>
       </Container>
     </div>

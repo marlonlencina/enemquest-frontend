@@ -90,3 +90,11 @@
 .landing-page section[id] {
   scroll-margin-top: 12rem;
 }
+
+.auth-grid-background {
+  background-color: var(--color-gray-100-custom);
+  background-image:
+    linear-gradient(to right, #dee1e399 1px, transparent 1px),
+    linear-gradient(to bottom, #dee1e399 1px, transparent 1px);
+  background-size: 48px 48px;
+}

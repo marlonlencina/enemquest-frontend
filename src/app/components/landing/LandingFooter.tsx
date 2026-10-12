@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Smartphone } from "lucide-react";
+import { PrivacySettingsButton } from "../privacy/PrivacySettingsButton";
 import { Logo } from "../layout/Logo";
 import { WHATSAPP_COMMUNITY_URL } from "./content";
 
@@ -81,6 +82,7 @@ export const LandingFooter = () => (
         <div className="flex flex-col items-center gap-2 sm:items-start">
           <span>© {new Date().getFullYear()} ENEM Quest. Todos os direitos reservados.</span>
           <Link href="/politicas-e-termos" className="text-white/80 underline underline-offset-4 hover:text-white-custom">Política de privacidade e termos de uso</Link>
+          <PrivacySettingsButton />
         </div>
         <span>
           ENEM é uma avaliação do INEP. O ENEM Quest não possui vínculo com o INEP ou o MEC.
