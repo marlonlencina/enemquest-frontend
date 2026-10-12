@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import { StudyDeviceNotice } from "./StudyDeviceNotice";
 import { CtaLink } from "./CtaLink";
 import { Reveal } from "./Reveal";
 
@@ -30,8 +31,8 @@ export const FinalCta = () => (
             Sua próxima questão certa começa agora.
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-body16 sm:text-body18 text-white/80">
-            Crie sua conta gratuita, gere sua primeira lista e descubra hoje onde
-            focar seus estudos.
+            Crie sua conta gratuita, escolha o que quer treinar e resolva sua
+            primeira lista com questões oficiais do ENEM.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
             <CtaLink href="/auth/signup" arrow>
@@ -41,6 +42,7 @@ export const FinalCta = () => (
               Já tenho conta
             </CtaLink>
           </div>
+          <StudyDeviceNotice dark className="mx-auto mt-5 max-w-lg text-left" />
         </div>
       </div>
     </Reveal>

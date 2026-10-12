@@ -9,10 +9,10 @@ export const ProblemSolution = () => (
       eyebrow="Por que o ENEM Quest"
       title={
         <>
-          Pare de estudar no escuro.
+          Menos tempo organizando. Mais tempo praticando.
         </>
       }
-      description="Resolver provas antigas é a melhor forma de se preparar, mas fazer isso sem organização desperdiça seu tempo. A gente cuida da parte chata para você focar no que importa."
+      description="Reúna questões oficiais em uma lista, escolha o que quer treinar e confira o resultado sem corrigir cada resposta à mão."
     />
 
     <div className="mt-14 grid gap-6 md:grid-cols-2">

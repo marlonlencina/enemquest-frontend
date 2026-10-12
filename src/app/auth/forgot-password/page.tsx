@@ -1,54 +1,31 @@
 "use client";
 import { Button } from "@/app/components/form/Button";
-import { HelperMessage } from "@/app/components/form/HelperMessage";
 import { Input } from "@/app/components/form/Input";
 import { LinkButton } from "@/app/components/form/LinkButton";
 import { Container } from "@/app/components/layout/Container";
 import { Logo } from "@/app/components/layout/Logo";
-import { useAuth } from "@/context/useAuth";
-import { useErrorHandler } from "@/utils/errorHandler";
+import { AUTH_MAINTENANCE_ENABLED } from "@/config/maintenance";
 import { useFormik } from "formik";
-import { useState } from "react";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-  login: Yup.string().required("E-mail ou usuário é obrigatório"),
-  password: Yup.string()
-    .min(6, "Senha deve ter pelo menos 8 caracteres")
-    .required("Senha é obrigatória"),
+  login: Yup.string().email("Informe um e-mail válido").required("E-mail é obrigatório"),
 });
 
 export default function ForgotPassword() {
-  const { login } = useAuth();
-  const { handleError, applyValidationErrors } = useErrorHandler();
-  const [serverError, setServerError] = useState<string | null>(null);
   const formik = useFormik({
-    initialValues: {
-      login: "",
-      password: "",
-    },
+    initialValues: { login: "" },
     validateOnBlur: false,
     validateOnMount: false,
     validateOnChange: false,
     validationSchema,
-    onSubmit: async (values) => {
-      setServerError(null);
-      try {
-        await login({
-          login: values.login,
-          senha: values.password,
-        });
-      } catch (error: any) {
-        const { isValidationError, validationErrors, message } =
-          handleError(error);
-
-        if (isValidationError && validationErrors.length > 0) {
-          applyValidationErrors(formik, validationErrors);
-          setServerError(null);
-        } else {
-          setServerError(message);
-        }
-      }
+    onSubmit: (_values, { setFieldError }) => {
+      setFieldError(
+        "login",
+        AUTH_MAINTENANCE_ENABLED
+          ? "Estamos em manutenção. A recuperação de senha está temporariamente indisponível. Tente novamente mais tarde."
+          : "A recuperação de senha está indisponível. Entre em contato com suporte@enemquest.com.br."
+      );
     },
   });
   return (
@@ -63,7 +40,6 @@ export default function ForgotPassword() {
               </h6>
             </div>
             <div className="w-full p-6 flex flex-col gap-6">
-              <HelperMessage message={serverError} showIcon variant="error" />
               <div className="">
                 <h6 className="font-head text-body16 font-semibold text-black-custom">
                   Entre com seu e-mail cadastrado

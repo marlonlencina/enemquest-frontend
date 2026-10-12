@@ -1,8 +1,10 @@
 "use client";
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, Wrench, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AUTH_MAINTENANCE_ENABLED } from "@/config/maintenance";
+import { WHATSAPP_COMMUNITY_URL } from "./content";
 import { Logo } from "../layout/Logo";
 import { navLinks } from "./content";
 import { CtaLink } from "./CtaLink";
@@ -23,8 +25,30 @@ export const LandingHeader = () => {
   }, [open]);
 
   return (
+    <div className="sticky top-0 z-50">
+      {AUTH_MAINTENANCE_ENABLED && (
+        <div role="status" className="border-b border-white/10 bg-blue-primary-dark px-4 py-2 text-white-custom sm:py-3">
+          <div className="mx-auto flex max-w-6xl items-start gap-2.5 sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-3">
+            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/10 sm:mt-0 sm:h-auto sm:w-auto sm:bg-transparent">
+              <Wrench aria-hidden className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            </span>
+            <div className="min-w-0 flex-1 sm:flex sm:flex-none sm:flex-wrap sm:items-center sm:justify-center sm:gap-x-3 sm:gap-y-1">
+              <p className="text-sm12 leading-relaxed sm:text-body14">
+                <strong className="block font-bold sm:inline">Estamos em manutenção.<span className="hidden sm:inline"> </span></strong>
+                <span className="text-white/85 sm:hidden">Login e cadastro indisponíveis no momento.</span>
+                <span className="hidden sm:inline">Login e cadastro estão temporariamente indisponíveis.</span>
+              </p>
+              <a href={WHATSAPP_COMMUNITY_URL} target="_blank" rel="noopener noreferrer" className="-ml-1 mt-0.5 inline-flex min-h-8 items-center gap-1 rounded px-1 text-sm12 font-semibold text-white underline decoration-white/50 underline-offset-4 hover:decoration-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:ml-0 sm:mt-0 sm:min-h-0 sm:text-body14">
+                <span className="sm:hidden">Novidades no WhatsApp</span>
+                <span className="hidden sm:inline">Acompanhe as novidades</span>
+                <ArrowUpRight aria-hidden className="h-3.5 w-3.5 shrink-0" />
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
     <header
-      className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      className={`relative w-full transition-all duration-300 ${
         scrolled || open
           ? "bg-white-custom/85 backdrop-blur-md border-b border-gray-300-custom/70 shadow-[0_1px_12px_rgba(9,10,10,0.04)]"
           : "bg-transparent border-b border-transparent"
@@ -88,7 +112,7 @@ export const LandingHeader = () => {
             animate={{ opacity: 1, height: "100dvh" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden overflow-hidden bg-white-custom"
+            className="lg:hidden max-h-[calc(100dvh-12rem)] overflow-y-auto bg-white-custom"
           >
             <nav className="flex flex-col gap-1 px-6 pt-4 pb-8" aria-label="Menu mobile">
               {navLinks.map((l, i) => (
@@ -117,5 +141,6 @@ export const LandingHeader = () => {
         )}
       </AnimatePresence>
     </header>
+    </div>
   );
 };

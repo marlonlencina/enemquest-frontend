@@ -46,7 +46,7 @@ export const FeaturesBento = () => (
     <div className="mx-auto max-w-6xl px-6 py-24">
       <SectionHeading
         eyebrow="Funcionalidades"
-        title="Tudo para transformar prática em nota"
+        title="Escolha o que treinar. Confira como foi."
         description="Ferramentas pensadas para quem leva o ENEM a sério, sem complicação."
       />
 

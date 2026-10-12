@@ -1,12 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
 import { CheckCircle2, ListChecks, Sparkles, Trophy } from "lucide-react";
+import { StudyDeviceNotice } from "./StudyDeviceNotice";
 import { CtaLink } from "./CtaLink";
 import { QuestionDemo } from "./QuestionDemo";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
-const headline = ["Treine", "com", "questões", "reais", "do", "ENEM."];
+const headline = ["Treine", "para", "o", "ENEM", "com", "listas"];
 
 export const Hero = () => {
   return (
@@ -60,7 +61,7 @@ export const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6, ease }}
             >
-              Do seu jeito.
+              focadas em você.
               <motion.svg
                 aria-hidden
                 viewBox="0 0 300 12"
@@ -87,9 +88,9 @@ export const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.75, ease }}
           >
-            Monte listas com questões oficiais de provas anteriores, filtre por
-            competência e habilidade e descubra exatamente onde você precisa
-            melhorar.
+            Escolha áreas, competências e habilidades para treinar com questões
+            oficiais. Pule o que já respondeu e veja seus acertos ao concluir
+            cada lista.
           </motion.p>
 
           <motion.div
@@ -105,6 +106,8 @@ export const Hero = () => {
               Ver como funciona
             </CtaLink>
           </motion.div>
+
+          <StudyDeviceNotice className="mt-4" />
 
           <motion.ul
             className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm14 font-medium text-gray-500-custom"

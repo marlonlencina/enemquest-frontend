@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { Pricing } from "./components/landing/Pricing";
+import { MobileApps } from "./components/landing/MobileApps";
+import { QuestionBank } from "./components/landing/QuestionBank";
+import { MatrixExplainer } from "./components/landing/MatrixExplainer";
+import { Testimonials } from "./components/landing/Testimonials";
 import { AreasStrip } from "./components/landing/AreasStrip";
 import { Community } from "./components/landing/Community";
-import { EnemNumbers } from "./components/landing/EnemNumbers";
 import { Faq } from "./components/landing/Faq";
 import { FeaturesBento } from "./components/landing/FeaturesBento";
 import { FinalCta } from "./components/landing/FinalCta";
@@ -30,15 +34,19 @@ export default function Home() {
   return (
     <LandingMotion>
       <RedirectIfAuthenticated />
-      <div className="min-h-screen w-full overflow-x-clip bg-gray-100-custom text-black-custom">
+      <div className="landing-page min-h-screen w-full overflow-x-clip bg-gray-100-custom text-black-custom">
         <LandingHeader />
         <main>
           <Hero />
           <AreasStrip />
+          <QuestionBank />
+          <MatrixExplainer />
           <ProblemSolution />
           <FeaturesBento />
           <HowItWorks />
-          <EnemNumbers />
+          <Pricing />
+          <Testimonials />
+          <MobileApps />
           <Community />
           <Faq />
           <FinalCta />

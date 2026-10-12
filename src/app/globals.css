@@ -78,3 +78,15 @@
   max-width: 1248px;
   margin: 0 auto;
 }
+
+/* Contraste da landing page, preservando os tokens do painel. */
+.landing-page {
+  --color-gray-400-custom: #686d72;
+  --color-gray-500-custom: #555b61;
+  --color-pink-primary: #b52656;
+  --color-pink-primary-dark: #991c46;
+}
+
+.landing-page section[id] {
+  scroll-margin-top: 12rem;
+}

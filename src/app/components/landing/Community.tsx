@@ -29,8 +29,8 @@ export const Community = () => (
         <SectionHeading
           align="left"
           eyebrow="Construído com estudantes"
-          title="O ENEM Quest está em beta, e você pode ajudar a moldá-lo"
-          description="Estamos evoluindo a plataforma junto com quem usa. Entre na comunidade, conte o que funciona, o que falta e o que faria diferença nos seus estudos."
+          title="Estude com a gente e acompanhe as novidades"
+          description="Entre na comunidade para acompanhar atualizações, tirar dúvidas sobre a plataforma e compartilhar sugestões para seus estudos."
         />
         <Reveal delay={0.1} className="mt-8 flex flex-col sm:flex-row gap-3">
           <CtaLink href={WHATSAPP_COMMUNITY_URL} external variant="secondary">

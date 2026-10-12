@@ -1,3 +1,5 @@
+import { AUTH_MAINTENANCE_ENABLED } from "@/config/maintenance";
+
 // Conteúdo da landing page.
 // Os textos refletem funcionalidades que existem no app (geração de listas,
 // filtros por competência/habilidade, revisão de respostas, ranking beta etc.).
@@ -8,6 +10,7 @@ export const WHATSAPP_COMMUNITY_URL =
 export const navLinks = [
   { href: "#funcionalidades", label: "Funcionalidades" },
   { href: "#como-funciona", label: "Como funciona" },
+  { href: "#planos", label: "Plano grátis" },
   { href: "#comunidade", label: "Comunidade" },
   { href: "#faq", label: "Dúvidas" },
 ];
@@ -49,7 +52,7 @@ export const areas = [
 
 export const painPoints = [
   "PDFs de provas espalhados em dezenas de abas",
-  "Não saber qual habilidade você mais erra",
+  "Perder tempo procurando questões para treinar",
   "Refazer sem querer questões que já resolveu",
   "Corrigir tudo à mão olhando o gabarito",
 ];
@@ -89,7 +92,7 @@ export const enemNumbers = [
 export const faqs = [
   {
     q: "O ENEM Quest é gratuito?",
-    a: "Sim. O ENEM Quest está em beta aberto e você pode criar sua conta e usar a plataforma gratuitamente.",
+    a: "Sim. O uso da plataforma é gratuito durante o beta, sem cartão de crédito. Durante a manutenção, login e cadastro ficam temporariamente indisponíveis.",
   },
   {
     q: "De onde vêm as questões?",
@@ -105,7 +108,45 @@ export const faqs = [
   },
   {
     q: "Funciona no celular?",
-    a: "Por enquanto o painel é otimizado para notebooks e tablets. A versão para celular é prioridade e já está a caminho.",
+    a: "Você pode conhecer a plataforma pelo celular, mas o painel de estudos ainda fica indisponível em telas pequenas. Para resolver suas listas quando o acesso estiver disponível, use um notebook ou tablet. Os apps para iOS e Android serão lançados em breve.",
+  },
+  {
+    q: "Por que não consigo entrar ou criar uma conta?",
+    a: AUTH_MAINTENANCE_ENABLED
+      ? "A plataforma está em manutenção. Os formulários continuam visíveis, mas login e cadastro estão temporariamente indisponíveis, inclusive com Google. Acompanhe as novidades na comunidade no WhatsApp."
+      : "Confira os dados informados e a mensagem exibida no formulário. Se o problema continuar, entre em contato pelo e-mail suporte@enemquest.com.br.",
+  },
+  {
+    q: "Preciso entender competências e habilidades para começar?",
+    a: "Não. Você pode começar escolhendo apenas as áreas que quer treinar. Competência é um conjunto mais amplo de conhecimentos; habilidade é uma ação específica dentro dele. Esses filtros são opcionais e ajudam a refinar suas listas.",
+  },
+  {
+    q: "Posso escolher a quantidade de questões da lista?",
+    a: "Sim. Ao gerar uma lista, você pode definir um total geral, uma quantidade por área ou quantidades específicas para cada área selecionada. A geração depende das questões disponíveis para os filtros escolhidos.",
+  },
+  {
+    q: "Quais áreas posso estudar?",
+    a: "As quatro áreas das questões objetivas do ENEM: Linguagens, Ciências Humanas, Ciências da Natureza e Matemática. Você escolhe quais deseja incluir na sua lista.",
+  },
+  {
+    q: "Quando vejo o resultado das minhas respostas?",
+    a: "Ao concluir e enviar a lista, você recebe a correção automática, com acertos, erros e aproveitamento. Antes de enviar, pode revisar as alternativas marcadas e as questões que ficaram em branco.",
+  },
+  {
+    q: "Meu aproveitamento equivale à nota oficial do ENEM?",
+    a: "Não. O aproveitamento mostra seus acertos na lista e serve para acompanhar a prática. Ele não equivale à nota oficial do ENEM nem garante um resultado na prova.",
+  },
+  {
+    q: "Já posso baixar o aplicativo para iOS ou Android?",
+    a: "Ainda não. Os aplicativos estão previstos para iOS e Android, mas não estão disponíveis para download e ainda não há uma data de lançamento anunciada. Acompanhe as novidades pela comunidade no WhatsApp.",
+  },
+  {
+    q: "O ENEM Quest é uma plataforma oficial do INEP?",
+    a: "Não. O ENEM Quest é uma plataforma independente de estudos e não possui vínculo com o INEP ou o MEC. As questões utilizadas têm origem em provas anteriores do ENEM.",
+  },
+  {
+    q: "Onde consulto a política de privacidade e os termos?",
+    a: "O link para a política de privacidade e os termos de uso está no rodapé desta página. Para dúvidas sobre sua conta ou solicitações relacionadas aos seus dados, escreva para suporte@enemquest.com.br.",
   },
   {
     q: "Encontrei um erro ou tenho uma ideia. Como aviso?",

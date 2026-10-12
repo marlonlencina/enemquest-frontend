@@ -3,6 +3,7 @@ import { motion, useScroll, useSpring } from "framer-motion";
 import { ListPlus, PenLine, UserPlus } from "lucide-react";
 import { useRef } from "react";
 import { steps } from "./content";
+import { StudyDeviceNotice } from "./StudyDeviceNotice";
 import { CtaLink } from "./CtaLink";
 import { Reveal } from "./Reveal";
 import { SectionHeading } from "./SectionHeading";
@@ -29,8 +30,9 @@ export const HowItWorks = () => {
           />
           <Reveal delay={0.1} className="mt-8">
             <CtaLink href="/auth/signup" arrow>
-              Criar minha conta
+              Criar conta grátis
             </CtaLink>
+            <StudyDeviceNotice className="mt-4" />
           </Reveal>
         </div>
 
